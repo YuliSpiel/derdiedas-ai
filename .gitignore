@@ -1,5 +1,14 @@
 # Virtual environment
 dddvenv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 
 # macOS system files
 .DS_Store
@@ -7,5 +16,17 @@ dddvenv/
 # test folders
 test/
 
-# text environment files
+# Environment files
 *.env
+config/.env
+
+# Model cache
+models_cache/
+outputs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
