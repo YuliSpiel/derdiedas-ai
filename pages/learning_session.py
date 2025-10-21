@@ -467,7 +467,7 @@ def show_completion_stage():
                     profile.skill_learning_count[skill_id] += 1
 
                     # 스탬프 추가
-                    profile.stamps_earned += 1
+                    profile.total_stamps += 1
 
                     # 저장
                     profile_manager.save_profile(profile)
