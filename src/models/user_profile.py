@@ -144,6 +144,11 @@ class ProfileManager:
 
         self.save_profile(profile)
 
+        # 레벨 테스트 완료 후 사용자 수준에 맞는 추천 노트북 생성
+        if skill_proficiency:
+            self.refresh_recommended_notebooks()
+            print(f"✨ 레벨 테스트 결과 기반 추천 노트북 생성 완료")
+
     def load_notebooks(self) -> List[Notebook]:
         """노트북 목록 로드"""
         if self.notebooks_file.exists():
