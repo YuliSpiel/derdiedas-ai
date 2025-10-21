@@ -28,8 +28,8 @@ profile = profile_manager.load_profile()
 is_first_visit = profile.nickname == "학습자" and profile.level == "미측정"
 
 if is_first_visit:
-    # 최초 접속: 프로필 설정 페이지로 이동
-    st.switch_page("pages/dashboard.py")
+    # 최초 접속: 온보딩 페이지로 이동
+    st.switch_page("pages/onboarding.py")
 else:
     # 기존 사용자: 대시보드로 이동
     st.switch_page("pages/dashboard.py")
