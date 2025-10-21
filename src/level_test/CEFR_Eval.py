@@ -1039,33 +1039,27 @@ class LevelTestSession:
         print(f"   코사인 유사도 참고: {cosine_level.name}-{cosine_sub.value}")
 
         # 4. 스킬별 숙련도 평가 (GPT 판정 레벨 기준)
-        skill_proficiency = {}
-        try:
-            from level_test.skill_proficiency_assessor import SkillProficiencyAssessor
+        # 스킬 숙련도 평가 (현재는 폴백 모드로 강제)
+        print(f"\n📊 스킬 숙련도 평가 (폴백 모드)")
+        print(f"   사용자 레벨: {final_level_name}")
 
-            assessor = SkillProficiencyAssessor()
-            writing_samples = [resp.text for resp in self.responses]
+        # 폴백: 레벨 기반 스킬 숙련도 생성
+        skill_proficiency = self._generate_fallback_proficiency(final_level_name)
+        print(f"   폴백 데이터 생성 완료: {len(skill_proficiency)}개 스킬")
 
-            print(f"\n📊 스킬 숙련도 평가 시작...")
-            print(f"   사용자 레벨: {final_level_name}")
-            print(f"   작문 샘플 개수: {len(writing_samples)}")
-
-            skill_proficiency = assessor.assess_proficiency(
-                user_level=final_level_name,
-                writing_samples=writing_samples
-            )
-
-            print(f"   평가 완료: {len(skill_proficiency)}개 스킬")
-
-        except Exception as e:
-            print(f"⚠️ 스킬 숙련도 평가 실패: {e}")
-            import traceback
-            traceback.print_exc()
-            print(f"⚠️ 테스트용 더미 데이터 생성 중...")
-
-            # 폴백: 레벨 기반 더미 스킬 숙련도 생성
-            skill_proficiency = self._generate_fallback_proficiency(final_level_name)
-            print(f"   폴백 데이터 생성 완료: {len(skill_proficiency)}개 스킬")
+        # TODO: GPT 기반 평가는 grammar_ontology.json 오류 수정 후 재활성화
+        # skill_proficiency = {}
+        # try:
+        #     from level_test.skill_proficiency_assessor import SkillProficiencyAssessor
+        #     assessor = SkillProficiencyAssessor()
+        #     writing_samples = [resp.text for resp in self.responses]
+        #     skill_proficiency = assessor.assess_proficiency(
+        #         user_level=final_level_name,
+        #         writing_samples=writing_samples
+        #     )
+        # except Exception as e:
+        #     print(f"⚠️ 스킬 숙련도 평가 실패: {e}")
+        #     skill_proficiency = self._generate_fallback_proficiency(final_level_name)
 
         return {
             "final_level": final_level_name,
