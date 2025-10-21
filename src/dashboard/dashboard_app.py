@@ -174,7 +174,7 @@ def show_profile_edit(profile: UserProfile):
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
 
-        # 관심사
+        # 관심사 (선택 + 직접 입력)
         interest_options = [
             "여행",
             "음악",
@@ -188,26 +188,15 @@ def show_profile_edit(profile: UserProfile):
             "비즈니스",
         ]
 
-        # 기존 관심사 중 목록에 없는 것들 추가
-        existing_custom_interests = [i for i in profile.interests if i not in interest_options]
+        # 기존 관심사 중 목록에 없는 것들도 함께 표시
+        all_interest_options = list(set(interest_options + profile.interests))
 
         new_interests = st.multiselect(
-            "관심사 (복수 선택)",
-            interest_options,
-            default=[i for i in profile.interests if i in interest_options]
+            "관심사 (복수 선택, 직접 입력 가능)",
+            options=all_interest_options,
+            default=profile.interests,
+            help="목록에서 선택하거나 직접 입력 후 엔터를 누르세요"
         )
-
-        # 커스텀 관심사 입력
-        custom_interest = st.text_input(
-            "기타 관심사 (직접 입력, 쉼표로 구분)",
-            value=", ".join(existing_custom_interests),
-            placeholder="예: 게임, 사진, 디자인"
-        )
-
-        # 커스텀 관심사 파싱
-        if custom_interest.strip():
-            custom_list = [i.strip() for i in custom_interest.split(",") if i.strip()]
-            new_interests.extend(custom_list)
 
         # 목표
         goal_options = ["회화", "문법", "작문", "독해", "시험 대비", "비즈니스 독일어", "여행", "취미", "유학 준비"]
