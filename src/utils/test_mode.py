@@ -133,58 +133,12 @@ def render_test_sidebar() -> bool:
 
     with st.sidebar:
         st.markdown('<div class="test-mode-badge">🧪 TEST MODE</div>', unsafe_allow_html=True)
-        st.title("테스트 모드")
+        st.title("개발 모드")
 
-        st.warning("⚠️ 개발/테스트 전용 기능입니다.")
+        st.warning("⚠️ 개발/테스트 전용")
 
-        # 현재 사용자 표시
-        current_user = st.session_state.get("test_user_id", "default")
-        st.info(f"현재 사용자: **{current_user}**")
-
-        st.divider()
-
-        # 사용자 선택
-        st.subheader("사용자 전환")
-
-        selected_user = st.selectbox(
-            "사용자 선택",
-            options=[u["id"] for u in TEST_USERS],
-            format_func=lambda x: next(u["name"] for u in TEST_USERS if u["id"] == x),
-            index=[u["id"] for u in TEST_USERS].index(current_user) if current_user in [u["id"] for u in TEST_USERS] else 0,
-            key="test_user_select"
-        )
-
-        # 선택한 사용자 설명
-        user_desc = next((u["description"] for u in TEST_USERS if u["id"] == selected_user), "")
-        st.caption(user_desc)
-
-        # 커스텀 사용자 ID 입력
-        if selected_user == "custom":
-            custom_id = st.text_input("사용자 ID 입력", value="", key="custom_user_id")
-            if custom_id:
-                selected_user = custom_id
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            if st.button("🔄 전환", use_container_width=True, type="primary"):
-                if selected_user != current_user:
-                    switch_user(selected_user)
-                    st.session_state.test_user_id = selected_user
-                    st.success(f"✅ {selected_user}로 전환됨")
-                    return True  # 페이지 리로드 필요
-
-        with col2:
-            if st.button("💾 저장", use_container_width=True):
-                save_current_user(current_user)
-                st.success(f"✅ {current_user}에 저장됨")
-
-        st.divider()
-
-        # 캐시 관리
-        st.subheader("캐시 관리")
-
-        if st.button("🗑️ 전체 캐시 삭제", use_container_width=True):
+        # 데이터 초기화 버튼만 표시
+        if st.button("🗑️ 데이터 초기화", use_container_width=True, type="primary"):
             prod_profile = get_production_data_path("user_profile.json")
             prod_notebooks = get_production_data_path("notebooks.json")
 
@@ -197,17 +151,9 @@ def render_test_sidebar() -> bool:
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
 
-            st.success("✅ 캐시 삭제 완료")
+            st.success("✅ 데이터 초기화 완료")
             return True  # 페이지 리로드 필요
 
-        st.divider()
-
-        # 디버그 정보
-        with st.expander("🔍 디버그 정보"):
-            st.json({
-                "current_user": current_user,
-                "session_state_keys": list(st.session_state.keys()),
-                "data_dir": get_test_data_dir(),
-            })
+        st.caption("모든 사용자 데이터를 삭제하고 첫 접속 상태로 초기화합니다.")
 
     return False
