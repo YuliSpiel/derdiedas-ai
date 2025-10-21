@@ -1,0 +1,928 @@
+ <!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1"/>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+        <meta http-equiv="cache-control" content="no-cache,no-store"/>
+        <meta http-equiv="pragma" content="no-cache"/>
+        <meta http-equiv="expires" content="-1"/>
+        <meta name='mswebdialog-title' content='Connecting to Weblogin'/>
+
+        <title>Sign In</title>
+        <script type='text/javascript'>
+//<![CDATA[
+function LoginErrors(){this.userNameFormatError = 'Enter your user ID in the format \u0026quot;domain\\user\u0026quot; or \u0026quot;user@domain\u0026quot;.'; this.passwordEmpty = 'Enter your password.'; this.passwordTooLong = 'Password is too long (\u0026gt; 128 characters).';}; var maxPasswordLength = 128;
+//]]>
+</script>
+
+<script type='text/javascript'>
+//<![CDATA[
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+function InputUtil(errTextElementID, errDisplayElementID) {
+
+    if (!errTextElementID)  errTextElementID = 'errorText'; 
+    if (!errDisplayElementID)  errDisplayElementID = 'error'; 
+
+    this.hasFocus = false;
+    this.errLabel = document.getElementById(errTextElementID);
+    this.errDisplay = document.getElementById(errDisplayElementID);
+};
+InputUtil.prototype.canDisplayError = function () {
+    return this.errLabel && this.errDisplay;
+}
+InputUtil.prototype.checkError = function () {
+    if (!this.canDisplayError){
+        throw new Error ('Error element not present');
+    }
+    if (this.errLabel && this.errLabel.innerHTML) {
+        this.errDisplay.style.display = '';        
+        var cause = this.errLabel.getAttribute('for');
+        if (cause) {
+            var causeNode = document.getElementById(cause);
+            if (causeNode && causeNode.value) {
+                causeNode.focus();
+                this.hasFocus = true;
+            }
+        }
+    }
+    else {
+        this.errDisplay.style.display = 'none';
+    }
+};
+InputUtil.prototype.setInitialFocus = function (input) {
+    if (this.hasFocus) return;
+    var node = document.getElementById(input);
+    if (node) {
+        if ((/^\s*$/).test(node.value)) {
+            node.focus();
+            this.hasFocus = true;
+        }
+    }
+};
+InputUtil.prototype.setError = function (input, errorMsg) {
+    if (!this.canDisplayError) {
+        throw new Error('Error element not present');
+    }
+    input.focus();
+
+    if (errorMsg) {
+        this.errLabel.innerHTML = errorMsg;
+    }
+    this.errLabel.setAttribute('for', input.id);
+    this.errDisplay.style.display = '';
+};
+InputUtil.makePlaceholder = function (input) {
+    var ua = navigator.userAgent;
+
+    if (ua != null && 
+        (ua.match(/MSIE 9.0/) != null || 
+         ua.match(/MSIE 8.0/) != null ||
+         ua.match(/MSIE 7.0/) != null)) {
+        var node = document.getElementById(input);
+        if (node) {
+            var placeholder = node.getAttribute("placeholder");
+            if (placeholder != null && placeholder != '') {
+                var label = document.createElement('input');
+                label.type = "text";
+                label.value = placeholder;
+                label.readOnly = true;
+                label.style.position = 'absolute';
+                label.style.borderColor = 'transparent';
+                label.className = node.className + ' hint';
+                label.tabIndex = -1;
+                label.onfocus = function () { this.nextSibling.focus(); };
+
+                node.style.position = 'relative';
+                node.parentNode.style.position = 'relative';
+                node.parentNode.insertBefore(label, node);
+                node.onkeyup = function () { InputUtil.showHint(this); };
+                node.onblur = function () { InputUtil.showHint(this); };
+                node.style.background = 'transparent';
+
+                node.setAttribute("placeholder", "");
+                InputUtil.showHint(node);
+            }
+        }
+    }
+};
+InputUtil.focus = function (inputField) {
+    var node = document.getElementById(inputField);
+    if (node) node.focus();
+};
+InputUtil.hasClass = function(node, clsName) {
+    return node.className.match(new RegExp('(\\s|^)' + clsName + '(\\s|$)'));
+};
+InputUtil.addClass = function(node, clsName) {
+    if (!this.hasClass(node, clsName)) node.className += " " + clsName;
+};
+InputUtil.removeClass = function(node, clsName) {
+    if (this.hasClass(node, clsName)) {
+        var reg = new RegExp('(\\s|^)' + clsName + '(\\s|$)');
+        node.className = node.className.replace(reg, ' ');
+    }
+};
+InputUtil.showHint = function (node, gotFocus) {
+    if (node.value && node.value != '') {
+        node.previousSibling.style.display = 'none';
+    }
+    else {
+        node.previousSibling.style.display = '';
+    }
+};
+InputUtil.updatePlaceholder = function (input, placeholderText) {
+    var node = document.getElementById(input);
+    if (node) {
+        var ua = navigator.userAgent;
+        if (ua != null &&
+            (ua.match(/MSIE 9.0/) != null ||
+            ua.match(/MSIE 8.0/) != null ||
+            ua.match(/MSIE 7.0/) != null)) {
+            var label = node.previousSibling;
+            if (label != null) {
+                label.value = placeholderText;
+            }
+        }
+        else {
+            node.placeholder = placeholderText;
+        }
+    }
+};
+
+//]]>
+</script>
+
+
+        
+        <link rel="stylesheet" type="text/css" href="/adfs/portal/css/style.css?id=07AF24E709E8E94BE4EDE4D5757963F1FC298FF65D76E86AA9B4DA235CD8AE74" /><style>.illustrationClass {background-image:url(/adfs/portal/illustration/illustration.png?id=183128A3C941EDE3D9199FA37D6AA90E0A7DFE101B37D10B4FEDA0CF35E11AFD);}</style>
+
+    </head>
+    <body dir="ltr" class="body">
+    <div id="noScript" style="position:static; width:100%; height:100%; z-index:100">
+        <h1>JavaScript required</h1>
+        <p>JavaScript is required. This web browser does not support JavaScript or JavaScript in this web browser is not enabled.</p>
+        <p>To find out if your web browser supports JavaScript or to enable JavaScript, see web browser help.</p>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+         document.getElementById("noScript").style.display = "none";
+    </script>
+    <div id="fullPage">
+        <div id="brandingWrapper" class="float">
+            <div id="branding"></div>
+        </div>
+        <div id="contentWrapper" class="float">
+            <div id="content">
+                <div id="header">
+                    <img class='logoImage' id='companyLogo' src='/adfs/portal/logo/logo.png?id=C79A6F4A64C53BEEADA60C9C0396B9ABD51DCD2BEE6F25F37995914B8B1986B4' alt='Weblogin'/>
+                </div>
+                <div id="workArea">
+                    
+    <div id="authArea" class="groupMargin">
+        
+        
+        
+    <div id="loginArea">        
+        <div id="loginMessage" class="groupMargin">Sign in with your organizational account</div>
+
+        <form method="post" id="loginForm" autocomplete="off" novalidate="novalidate" onKeyPress="if (event && event.keyCode == 13) Login.submitLoginRequest();" action="/adfs/ls/?SAMLRequest=jZJbbxoxEIXf%2BRWR3%2FdKQoIFVDT0gkQBBdqHviCvPWStem3XY5f039dZNyGt1KijfdnxfMfnzO4EWacsnQff6jv4HgD94CLWQ6c00v5wSoLT1DCUSDXrAKnndDf%2FtKJ1XlLrjDfcKPIX9jrFEMF5aXTClosp2azfrTYflusDsNGY34haiPGIAS9hWI9Hl1VV8avhJb8WNwwgvlwn9As4jDpTEmXJIKkhBlhq9Ez72C%2Frq6wqs7ralzUdVnRYfk3oIoaVmvkeb723SIviBI0y91LnjZEYB5iHHEQomDhiobBI6PZ36rdSC6nvXw%2FbpCGkH%2Ff7bbbd7PZJZP60hFujMXTgduB%2BSA6f71ZnPy9sWAeIjTHfMLehKU42Plkya1v7hvE%2BiW0O2MqmMQp8e2Acyay%2FbfL4VWi%2FGzf7L%2FWzzKR4CZ%2FlLF3HtMvF1ijJf%2Fb9x3pvXMf8v5dS5VXfkSI79qM0aLTA5VGCIM8yc6XM6dZBdDcl3gUgF8VskLz8%2BcvOfgE%3D&RelayState=https%3A%2F%2Fboisestate.pressbooks.pub%2Fwp%2Fwp-login.php%3Faction%3Dpb_shibboleth&client-request-id=e607ff26-eabe-4b3d-c317-00800100007c" >
+            <div id="error" class="fieldMargin error smallText">
+                <span id="errorText" for=""></span>
+            </div>
+
+            <div id="formsAuthenticationArea">
+                <div id="userNameArea">
+                    <label id="userNameInputLabel" for="userNameInput" class="hidden">User Account</label>
+                    <input id="userNameInput" name="UserName" type="email" value="" tabindex="1" class="text fullWidth"
+                        spellcheck="false" placeholder="someone@example.com" autocomplete="off"/>
+                </div>
+
+                <div id="passwordArea">
+                    <label id="passwordInputLabel" for="passwordInput" class="hidden">Password</label>
+                    <input id="passwordInput" name="Password" type="password" tabindex="2" class="text fullWidth"
+                        placeholder="Password" autocomplete="off"/>
+                </div>
+                <div id="kmsiArea" style="display:none">
+                    <input type="checkbox" name="Kmsi" id="kmsiInput" value="true" tabindex="3" />
+                    <label for="kmsiInput">Keep me signed in</label>
+                </div>
+                <div id="submissionArea" class="submitMargin">
+                    <span id="submitButton" class="submit" tabindex="4" role="button"
+                        onKeyPress="if (event && event.keyCode == 32) Login.submitLoginRequest();"
+                        onclick="return Login.submitLoginRequest();">Sign in</span>
+                </div>
+            </div>
+            <input id="optionForms" type="hidden" name="AuthMethod" value="FormsAuthentication"/>
+        </form>
+
+             <div id="authOptions">
+        <form id="options"  method="post" action="https://weblogin.boisestate.edu:443/adfs/ls/?SAMLRequest=jZJbbxoxEIXf%2BRWR3%2FdKQoIFVDT0gkQBBdqHviCvPWStem3XY5f039dZNyGt1KijfdnxfMfnzO4EWacsnQff6jv4HgD94CLWQ6c00v5wSoLT1DCUSDXrAKnndDf%2FtKJ1XlLrjDfcKPIX9jrFEMF5aXTClosp2azfrTYflusDsNGY34haiPGIAS9hWI9Hl1VV8avhJb8WNwwgvlwn9As4jDpTEmXJIKkhBlhq9Ez72C%2Frq6wqs7ralzUdVnRYfk3oIoaVmvkeb723SIviBI0y91LnjZEYB5iHHEQomDhiobBI6PZ36rdSC6nvXw%2FbpCGkH%2Ff7bbbd7PZJZP60hFujMXTgduB%2BSA6f71ZnPy9sWAeIjTHfMLehKU42Plkya1v7hvE%2BiW0O2MqmMQp8e2Acyay%2FbfL4VWi%2FGzf7L%2FWzzKR4CZ%2FlLF3HtMvF1ijJf%2Fb9x3pvXMf8v5dS5VXfkSI79qM0aLTA5VGCIM8yc6XM6dZBdDcl3gUgF8VskLz8%2BcvOfgE%3D&RelayState=https%3A%2F%2Fboisestate.pressbooks.pub%2Fwp%2Fwp-login.php%3Faction%3Dpb_shibboleth&client-request-id=e607ff26-eabe-4b3d-c317-00800100007c">
+            <script type="text/javascript">
+                function SelectOption(option) {
+                    var i = document.getElementById('optionSelection');
+                    i.value = option;
+                    document.forms['options'].submit();
+                    return false;
+                }
+            </script>
+            <input id="optionSelection" type="hidden" name="AuthMethod" />
+            <div id='authOptionLinks' class='groupMargin'></div>
+        </form>
+      </div>
+
+        <div id="introduction" class="groupMargin">
+            <div class='disclaimer'><div><a class='btn btn-link' href='https://my.boisestate.edu/guests'><i class='fa fa-user'>&nbsp;</i>Future Students / Guests</a></div><div><a href='https://reset.boisestate.edu/accounts/authVerify?operation=reset' target='_blank' class='btn btn-link'><i class='fa fa-lock' aria-hidden='true'></i> Reset / Create Password</a> <a href='https://www.boisestate.edu/oit/assistance/' target='_blank' class='btn btn-link'><i class='fa fa-info-circle' aria-hidden='true'></i> Help Desk</a></div></div>                     
+        </div>
+
+        <script type="text/javascript">
+        //<![CDATA[
+
+            function Login() {
+            }
+
+            Login.userNameInput = 'userNameInput';
+            Login.passwordInput = 'passwordInput';
+
+            Login.initialize = function () {
+
+                var u = new InputUtil();
+
+                u.checkError();
+                u.setInitialFocus(Login.userNameInput);
+                u.setInitialFocus(Login.passwordInput);
+            }();
+
+            Login.submitLoginRequest = function () { 
+                var u = new InputUtil();
+                var e = new LoginErrors();
+
+                var userName = document.getElementById(Login.userNameInput);
+                var password = document.getElementById(Login.passwordInput);
+
+                if (!userName.value || !userName.value.match('[@\\\\]')) {
+                    u.setError(userName, e.userNameFormatError);
+                    return false;
+                }
+
+                if (!password.value) {
+                    u.setError(password, e.passwordEmpty);
+                    return false;
+                }
+
+                if (password.value.length > maxPasswordLength) {
+                    u.setError(password, e.passwordTooLong);
+                    return false;
+                }
+
+                document.forms['loginForm'].submit();
+                return false;
+            };
+
+            InputUtil.makePlaceholder(Login.userNameInput);
+            InputUtil.makePlaceholder(Login.passwordInput);
+        //]]>
+        </script>
+    </div>
+
+    </div>
+
+                </div>
+                <div id="footerPlaceholder"></div>
+            </div>
+            <div id="footer">
+                <div id="footerLinks" class="floatReverse">
+                     <div><span id="copyright">&#169; 2016 Microsoft</span></div>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <script type='text/javascript'>
+//<![CDATA[
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+
+// This file contains several workarounds on inconsistent browser behaviors that administrators may customize.
+"use strict";
+
+if (!String.prototype.includes) {
+  String.prototype.includes = function(search, start) {
+    'use strict';
+    if (typeof start !== 'number') {
+      start = 0;
+    }
+    
+    if (start + search.length > this.length) {
+      return false;
+    } else {
+      return this.indexOf(search, start) !== -1;
+    }
+  };
+}
+
+// iPhone email friendly keyboard does not include "\" key, use regular keyboard instead.
+// Note change input type does not work on all versions of all browsers.
+if (navigator.userAgent.match(/iPhone/i) != null) {
+    var emails = document.querySelectorAll("input[type='email']");
+    if (emails) {
+        for (var i = 0; i < emails.length; i++) {
+            emails[i].type = 'text';
+        }
+    }
+}
+
+// In the CSS file we set the ms-viewport to be consistent with the device dimensions, 
+// which is necessary for correct functionality of immersive IE. 
+// However, for Windows 8 phone we need to reset the ms-viewport's dimension to its original
+// values (auto), otherwise the viewport dimensions will be wrong for Windows 8 phone.
+// Windows 8 phone has agent string 'IEMobile 10.0'
+if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+    var msViewportStyle = document.createElement("style");
+    msViewportStyle.appendChild(
+        document.createTextNode(
+            "@-ms-viewport{width:auto!important}"
+        )
+    );
+    msViewportStyle.appendChild(
+        document.createTextNode(
+            "@-ms-viewport{height:auto!important}"
+        )
+    );
+    document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+}
+
+// If the innerWidth is defined, use it as the viewport width.
+if (window.innerWidth && window.outerWidth && window.innerWidth !== window.outerWidth) {
+    var viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute('content', 'width=' + window.innerWidth + ', initial-scale=1.0, user-scalable=1');
+}
+
+// Gets the current style of a specific property for a specific element.
+function getStyle(element, styleProp) {
+    var propStyle = null;
+
+    if (element && element.currentStyle) {
+        propStyle = element.currentStyle[styleProp];
+    }
+    else if (element && window.getComputedStyle) {
+        propStyle = document.defaultView.getComputedStyle(element, null).getPropertyValue(styleProp);
+    }
+
+    return propStyle;
+}
+
+// The script below is used for downloading the illustration image 
+// only when the branding is displaying. This script work together
+// with the code in PageBase.cs that sets the html inline style
+// containing the class 'illustrationClass' with the background image.
+var computeLoadIllustration = function () {
+    var branding = document.getElementById("branding");
+    var brandingDisplay = getStyle(branding, "display");
+    var brandingWrapperDisplay = getStyle(document.getElementById("brandingWrapper"), "display");
+
+    if (brandingDisplay && brandingDisplay !== "none" &&
+        brandingWrapperDisplay && brandingWrapperDisplay !== "none") {
+        var newClass = "illustrationClass";
+
+        if (branding.classList && branding.classList.add) {
+            branding.classList.add(newClass);
+        } else if (branding.className !== undefined) {
+            branding.className += " " + newClass;
+        }
+        if (window.removeEventListener) {
+            window.removeEventListener('load', computeLoadIllustration, false);
+            window.removeEventListener('resize', computeLoadIllustration, false);
+        }
+        else if (window.detachEvent) {
+            window.detachEvent('onload', computeLoadIllustration);
+            window.detachEvent('onresize', computeLoadIllustration);
+        }
+    }
+};
+
+if (window.addEventListener) {
+    window.addEventListener('resize', computeLoadIllustration, false);
+    window.addEventListener('load', computeLoadIllustration, false);
+}
+else if (window.attachEvent) {
+    window.attachEvent('onresize', computeLoadIllustration);
+    window.attachEvent('onload', computeLoadIllustration);
+}
+
+// Function to change illustration image. Usage example below.
+function SetIllustrationImage(imageUri) {
+    var illustrationImageClass = '.illustrationClass {background-image:url(' + imageUri + ');}';
+
+    var css = document.createElement('style');
+    css.type = 'text/css';
+
+    if (css.styleSheet) css.styleSheet.cssText = illustrationImageClass;
+    else css.appendChild(document.createTextNode(illustrationImageClass));
+
+    document.getElementsByTagName("head")[0].appendChild(css);
+}
+
+// Example to change illustration image on HRD page after adding the image to active theme:
+// PSH> Set-AdfsWebTheme -TargetName <activeTheme> -AdditionalFileResource @{uri='/adfs/portal/images/hrd.jpg';path='.\hrd.jpg'}
+//
+//if (typeof HRD != 'undefined') {
+//    SetIllustrationImage('/adfs/portal/images/hrd.jpg');
+//}
+
+// Strip out the domain here in case an error occurred 
+// so the user can fix it
+if (document.forms['loginForm']) {
+	document.forms['loginForm'].userNameInput.value = document.forms['loginForm'].userNameInput.value.replace("boisestate.edu\\", "");
+	// Remove any email if exists on load since Microsft knows
+	// better than us
+	var deleteMe = getParameterByName('username');
+	if (deleteMe && deleteMe.includes("@")) {
+		document.forms['loginForm'].userNameInput.value = document.forms['loginForm'].userNameInput.value.split('@')[0];		
+	}
+}
+
+if (document.forms['updatePasswordForm'])
+	document.forms['updatePasswordForm'].userNameInput.value = document.forms['updatePasswordForm'].userNameInput.value.replace("boisestate.edu\\", "");
+
+if (typeof InputUtil != 'undefined') {
+  InputUtil.prototype.setError = function (input, errorMsg) {
+    if (!this.canDisplayError) {
+        throw new Error('Error element not present');
+    }
+    input.focus();
+
+    if (errorMsg) {
+        this.errLabel.innerHTML = errorMsg;
+    }
+    this.errLabel.setAttribute('for', input.id);
+	error_toast(errorMsg);
+  };
+}
+
+// Override the requirement for a domain in the user loginForm
+if (typeof UpdatePassword != 'undefined') {
+ UpdatePassword.submitPasswordChange = function () {
+  var u = new InputUtil();
+  var e = new UpdErrors();
+ 
+  var userName           = document.getElementById(UpdatePassword.userNameInput);
+  var oldPassword        = document.getElementById(UpdatePassword.oldPasswordInput);
+  var newPassword        = document.getElementById(UpdatePassword.newPasswordInput);
+  var confirmNewPassword = document.getElementById(UpdatePassword.confirmNewPasswordInput);
+  var message            = $("#passwordErrorTextPlaceHolder").html(); 
+  
+  if (!userName.value) {
+	u.setError(userName, message);
+	return false;  
+  }
+ 
+  if (!oldPassword.value) {
+   u.setError(oldPassword, e.oldPasswordEmpty);
+   return false;
+  }
+ 
+  if (!newPassword.value) {
+   u.setError(newPassword, e.newPasswordEmpty);
+   return false;
+  }
+ 
+  if (!confirmNewPassword.value) {
+   u.setError(confirmNewPassword, e.confirmNewPasswordEmpty);
+   return false;
+  }
+ 
+  if (newPassword.value !== confirmNewPassword.value) {
+   u.setError(confirmNewPassword, e.mismatchError);
+   return false;
+  }
+  
+  if (userName.value && !userName.value.match('[@\\\\]')) {
+   var un = 'boisestate.edu\\' + userName.value;
+   document.forms['updatePasswordForm'].userNameInput.value = un;
+  }
+ 
+  var error = document.getElementById('error');
+  error.innerHTML = '';
+  return true;
+ };
+}
+
+if (typeof Login != 'undefined') {
+ Login.submitLoginRequest = function () { 
+  var u = new InputUtil();
+  var e = new LoginErrors();
+
+  var userName = document.getElementById(Login.userNameInput);
+  var password = document.getElementById(Login.passwordInput);
+  var message  = $("#errorTextPlaceHolder").html();
+  
+  if (!userName.value) {
+	u.setError(userName, message);
+	return false;  
+  }
+
+  if (!password.value) {
+	u.setError(password, e.passwordEmpty);
+	return false;
+  }
+
+  if (password.value.length > maxPasswordLength) {
+	u.setError(password, e.passwordTooLong);
+	return false;
+  }
+  
+  if (userName.value && !userName.value.match('[@\\\\]')) {
+	var un = 'boisestate.edu\\' + userName.value;
+    document.forms['loginForm'].userNameInput.value = un;
+  }
+
+  document.forms['loginForm'].submit(); 
+  return false;
+ };
+}
+
+/****** Include jQuery */
+function loadScript(url, callback)
+{
+    // Adding the script tag to the head as suggested before
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+
+    // Then bind the event to the callback function.
+    // There are several events for cross browser compatibility.
+    script.onreadystatechange = callback;
+    script.onload = callback;
+
+    // Fire the loading
+    head.appendChild(script);
+
+    // create meta tag for viewport on mobile
+    var meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, initial-scale=1';
+
+    head.appendChild(meta);
+    
+    // create description meta tag
+    var metaDesc = document.createElement('meta');
+    metaDesc.name = 'description';
+    metaDesc.content = 'Access systems and services with your Boise State University username and password. JavaScript required.';
+
+    head.appendChild(metaDesc);
+}
+
+function error_toast(message, title) {
+	var t = title || "ERROR";
+	toastr.error(message, t, {
+      "closeButton": true,
+	    "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "0",
+      "hideDuration": "0",
+      "timeOut": "0",
+      "extendedTimeOut": "0",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    });
+}
+
+function info_toast(message) {
+	toastr.info(message, "Info", {
+      "closeButton": true,
+	    "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "0",
+      "hideDuration": "0",
+      "timeOut": "0",
+      "extendedTimeOut": "0",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    });
+}
+
+function warning_toast(message, title) {
+	toastr.warning(message, title, {
+      "closeButton": true,
+	    "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "0",
+      "hideDuration": "0",
+      "timeOut": "0",
+      "extendedTimeOut": "0",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    });
+}
+
+function searchBSU() {
+    var url = 'https://my.boisestate.edu/#/search-results?searchFor=';
+    var query = $("#searchQuery").val();
+    window.open(url + query, '_blank');
+    //$("#searchForm").attr("action", url + query);
+}
+
+loadScript("https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js", bsu_init);
+
+var html  = "<div class='login_error'>Wrong username or password.<br>Phone: <a href='tel:2084264357'>(208) 426-4357</a><br>Email: <a href='mailto:helpdesk@boisestate.edu'>helpdesk@boisestate.edu</a><br><a href='https://reset.boisestate.edu/accounts/authVerify?operation=reset'>Reset Password</a></div>";
+var uhtml = "<div class='uetext'>Select a new password which:<br><ul style='padding-left: 20px;'><li>is 8 characters or more in length</li><li>does not contain your username, first name, or last name</li><li>is not a password that you have used within the last year</li><li>has at least one character from 3 of the following 4 groups:<ul style='list-style-type: circle; padding-left: 10px;'><li>uppercase letters (A to Z)</li><li>lowercase letters (a to z)</li><li>digits (0 to 9)</li><li>special characters (~!@#&amp;*()_+\`-=:;\"'&lt;&gt;?./)</li><li>percent signs (%) and spaces are not allowed</li></ul></li></ul></div>"
+
+function bsu_init() {
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-1250107-2', 'auto');
+    ga('send', 'pageview');
+
+	
+	loadScript("https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js", load_toastr);
+	
+	var $ = window.jQuery;
+	
+	var $div = $("<div>", {id: "errorTextPlaceHolder", "class": "hidden"});
+	$div.html(html);
+	$("body").append($div);
+	
+	var $div2 = $("<div>", {id: "passwordErrorTextPlaceHolder", "class": "hidden"});
+	$div2.html(html);
+	$("body").append($div2);
+	
+	// Add CSS to input text boxes
+	$("input.text").addClass("form-control");
+	
+	// Set the background
+	setBackgroundImage();
+	
+	// Set the weather
+	$.get("https://mbs-weather-api.prod.boisestate.edu/api/weather", function(data) {
+		$("body").append("<h1 class='weather'>"+data.temperature+"\xB0 F</h1>");
+	});
+	
+	var font     = "font-family: FontAwesome, 'Helvetica Neue', Helvetica, Arial, sans-serif;";
+	var aStyle   = "style='cursor: pointer; color:#09347a;'"
+	var iStyle   = "style='position: absolute; margin-left: 10px; font-size: 2em; margin-top: 10px; background:white; border-radius:50%;height:1em;width:1em;'";
+	var iQStyle  = "style='position: absolute; margin-left: 10px; font-size: 1.75em; margin-top: 25px; background:white; border-radius:50%;height:1em;width:1em;'";
+	var iQNStyle = "style='position: absolute; margin-left: 10px; font-size: 1.75em; margin-top: 5px; background:white; border-radius:50%;height:1em;width:1em;'";
+	
+	// Set the FontAwesome icons for the input tags
+	$("#idp_GoButton").val("\uf090"+" "+$("#idp_GoButton").val()).attr("style", font);
+	$("#idp_SignInButton").val("\uf090"+" "+$("#idp_SignInButton").val()).attr("style", font);
+	$("#idp_SignOutButton").val("\uf08b"+" "+$("#idp_SignOutButton").val()).attr("style", font);
+	
+	// $("#submitButton").after("<a id='infoToastButton' " + aStyle + "><i class='fa fa-info-circle fa-3' aria-hidden='true' " + iStyle + "></i></a>")
+	if ($("#submitButton").is("input")) {
+		$("#submitButton")
+			.addClass("fa")
+			.val("\uf090"+" "+$("#submitButton").val())
+			.attr("style", font);
+	} else {
+		$("<i class='fa fa-sign-in' aria-hidden='true'>&nbsp;</i>").prependTo("#submitButton");
+	}
+	
+	$("#submitButton").click(function() {
+		window.scrollTo(0, 0);
+	});
+	
+	$("#infoToastButton").click(function() {
+		info_toast($(".disclaimer .alert").html());
+	});
+	
+	if ($("#cancelButton").is("input")) {
+		$("#cancelButton")
+			.addClass("fa")
+			.val("\uf05e"+" "+$("#cancelButton").val())
+			.attr("style", font);
+	} else {
+		$("<i class='fa fa-ban' aria-hidden='true'>&nbsp;</i>").prependTo("#cancelButton");
+	}
+	
+    // Add search form input HTML
+    $("#fullPage").after('<div id="searchFormWrapper" class="col-xs-12 col-sm-4"><form id="searchForm" method="post" target="_blank" onsubmit="searchBSU()"><input id="searchQuery" type="text" class="form-control" placeholder="&#xF002; Search Boise State"><button type="submit" style="display: none;"></button></form></div>');
+
+	// Add all the tooltips for the appropriate input boxes
+	// $("#userNameInput").after("<a href='#' data-toggle='tooltip' title='Please enter your Boise State username. Do not include @boisestate or @u.boisestate.edu.' " + aStyle + "><i class='fa fa-question fa-3' aria-hidden='true' " + iQStyle + "></i></a>");
+	// $("#passwordInput").after("<a target='_blank' href='https://oit.boisestate.edu/accounts/passwords/' data-toggle='tooltip' title='Please enter your Boise State password. If you do not know your password, click the ? icon for help.' " + aStyle + "><i class='fa fa-question fa-3' aria-hidden='true' " + iQNStyle + "></i></a>");
+	// $("#oldPasswordInput").after("<a target='_blank' href='https://oit.boisestate.edu/accounts/passwords/' data-toggle='tooltip' title='Please enter your Boise State password. If you do not know your password, click the ? icon for help.' " + aStyle + "><i class='fa fa-question fa-3' aria-hidden='true' " + iQNStyle + "></i></a>");
+	// $("#newPasswordInput").after("<a target='_blank' href='https://oit.boisestate.edu/accounts/passwords/' data-toggle='tooltip' title='Please click the ? for information on password requirements.' " + aStyle + "><i class='fa fa-question fa-3' aria-hidden='true' " + iQNStyle + "></i></a>");
+	// $("#confirmNewPasswordInput").after("<a href='#' data-toggle='tooltip' title='Please confirm your new password.' " + aStyle + "><i class='fa fa-question fa-3' aria-hidden='true' " + iQNStyle + "></i></a>");
+	
+	// Add the CSS classes for bootstrap
+	$("#contentWrapper").addClass("col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3");
+	$("#companyLogo").addClass("logo-image col-xs-12 col-sm-8 col-sm-offset-2 col-sm-offset-3 col-md-6 col-md-offset-3")
+					 .attr("style", "width:100%;margin:0;");
+	$("#submitButton,#cancelButton,#idp_SignInButton,#idp_SignOutButton,#idp_GoButton")
+		.addClass("btn btn-lg btn-warning btn-block");
+	$("#userNameInput").attr("placeholder", "Boise State Username");
+    $("#passwordInput").attr("placeholder", "Password");
+	$("#loginMessage").text("Please enter your Boise State username and password.")
+					  .addClass("fade in");
+	$("#error,#errorArea").addClass("alert alert-danger fade in");
+	$("#signoutArea").addClass("alert fade in");
+    $("#signoutArea #instruction").prepend('<i class="fa fa-check"></i>');
+	if ($("#updatePasswordForm").length == 0)
+		$("#updatePasswordArea").addClass("fade in");
+	else
+		$("#expiredNotification").addClass("fade in");
+	
+	$("#idp_SignInThisSiteStatusLabel").addClass("fade in");
+
+	// Import the CSS/JS from the CDN
+  // Ensure that our overrides css "/adfs/portal/css/style.css" is loaded after toaster.
+    $("head link").first().before('<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css">');
+
+    $("<link/>", {
+		rel: "stylesheet",
+		type: "text/css",
+		href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+		integrity: "sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u",
+		crossorigin: "anonymous"
+	}).appendTo("head");
+
+	$("<link/>", {
+		rel: "stylesheet",
+		type: "text/css",
+		href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
+		integrity: "sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp",
+		crossorigin: "anonymous"
+	}).appendTo("head");
+	
+	$("<link/>", {
+		rel: "stylesheet",
+		type: "text/css",
+		href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+		integrity: "sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN",
+		crossorigin: "anonymous"
+	}).appendTo("head");
+	
+	// $("<link/>", {
+	// 	rel: "stylesheet",
+	// 	type: "text/css",
+	// 	href: "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css"
+	// }).appendTo("head");
+	
+	$("<link/>", {
+		rel: "shortcut icon",
+		type: "image/x-icon",
+		href: "/adfs/portal/images/favicon.ico"
+	}).appendTo("head");
+
+	$("<script/>", {
+		src: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
+		integrity: "sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa",
+		crossorigin: "anonymous"
+	}).appendTo("head");
+	
+	$("#content").delay(500).fadeIn(400, function() {
+      $("#userNameInput").focus();
+      $("#searchFormWrapper").fadeIn("fast");
+  });
+
+}
+
+
+/**
+ * This function is useful when you want to retrieve the value of a query string parameter in a url.
+ * Pass in the name of the query string parameter as the first argument and the url as the second.
+ * @param name
+ * @param url
+ * @returns {*}
+ */
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+/**
+ * This function sets the background image depending on what view is being loaded. The logout
+ * view should show a consistent image, while the sign in view will display a random set of images
+ * served from the myBoiseState api.
+ */
+function setBackgroundImage() {
+    // determine if we are on the logout view through the 'wa' querystring parameter.
+    var view = getParameterByName('wa');
+
+    if(view === 'wsignout1.0') {
+        setSignOutBackgroundImage();
+        $.ajax({
+          type: "POST",
+          url: "https://weblogin.boisestate.edu/adfs/ls/idpinitiatedsignon",
+          data: "SingleSignOut=SingleSignOut&SignOut=%EF%82%8B+Sign+Out"
+        });
+    } else {
+        setSignInBackgroundImage();
+    }
+}
+
+function setSignInBackgroundImage() {
+    $.get("https://background-image-api.prod.boisestate.edu/api/getBackgroundImages", function(backgrounds) {
+		var randomIndex = Math.floor(Math.random() * backgrounds.length);
+		var randomImage = backgrounds[randomIndex]; 
+		$("body").css("background-image", "url('" + randomImage.imageUrl + "')")
+			     .css("background-position", "center center");
+				 
+		if(typeof randomImage.logoColor === 'undefined' || randomImage.logoColor !== "Blue"){
+			$("#companyLogo").attr("src", "/adfs/portal/images/nav-logo.png");
+		}
+	}).fail(function() {
+        console.log('background load failed');
+        // Set background when this randomly CORS's out :(
+        $("body")
+            .css("background-image", "url('https://my.prod.boisestate.edu/assets/background.jpeg')")
+            .css("background-position", "center center");
+        $("#companyLogo").attr("src", "/adfs/portal/images/nav-logo-blue.png");
+
+    });
+}
+
+function setSignOutBackgroundImage() {
+    $("body")
+        .css("background-image", "url('https://my.prod.boisestate.edu/assets/background.jpeg')")
+        .css("background-position", "center center");
+    $("#companyLogo").attr("src", "/adfs/portal/images/nav-logo-blue.png");
+}
+
+function load_toastr() {
+	var $ = window.jQuery;
+	
+	$(document).ready(function() {
+		
+        if ($("#userNameInput").length && document.referrer.toLowerCase().indexOf("/adfs") != -1) { // referrer IS the adfs site and username field exists
+        
+            // updatepassword page is both referrer and current page... ie... something went wrong, we're back
+            if (document.referrer.toLowerCase().indexOf("/adfs/portal/updatepassword") != -1
+				&& window.location.href.toLowerCase().indexOf("/adfs/portal/updatepassword") != -1) {
+				error_toast(html);
+			} 	
+
+            // login page is both referrer and current page, (and not the idp page)... ie... something went wrong, we're back
+            if (
+                (
+                    document.referrer.toLowerCase().indexOf("/adfs/ls") != -1
+                    && window.location.href.toLowerCase().indexOf("/adfs/ls") != -1
+                    && window.location.href.toLowerCase().indexOf("/adfs/ls/idpinitiatedsignon") == -1
+                )
+                || 
+                (
+                    document.referrer.toLowerCase().indexOf("/adfs/oauth2/authorize") != -1
+                    && window.location.href.toLowerCase().indexOf("/adfs/oauth2/authorize") != -1
+                )
+                || 
+                (
+                    document.referrer.toLowerCase().indexOf("/adfs/ls/idpinitiatedsignon.aspx?client-request-id") != -1
+                    && window.location.href.toLowerCase().indexOf("/adfs/ls/idpinitiatedsignon.aspx?client-request-id") != -1
+                )
+                ) {
+					error_toast(html);
+            }		
+        
+        }
+        
+		// Check for emergency messages
+		$.get("https://announcements-api.prod.boisestate.edu/api/announcements?showFuture=false&showExpired=false&isEmergency=true", function(data) {
+			for (var i = 0; i < data.length; i++) {
+				var m = data[i];
+				error_toast(m.body, m.title)
+			}
+		});
+		
+		// Check for maintenance messages
+		$.get("https://announcements-api.prod.boisestate.edu/api/announcements?showFuture=false&showExpired=false&isMaintenance=true", function(data) {
+			for (var i = 0; i < data.length; i++) {
+				var m = data[i];
+				warning_toast(m.body, m.title)
+			}
+		});
+	});
+}
+
+//]]>
+</script>
+
+
+    </body>
+</html> 
+
