@@ -348,7 +348,7 @@ class CEFRCorpusLoader:
                 text = None
 
                 # 레벨 필드 찾기
-                for level_key in ["cefr", "CEFR", "level", "Level", "label"]:
+                for level_key in ["cefr_level", "cefr", "CEFR", "level", "Level", "label"]:
                     if level_key in item:
                         level = str(item[level_key]).upper().strip()
                         break
