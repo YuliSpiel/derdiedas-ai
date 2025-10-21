@@ -1,10 +1,10 @@
 """
-DerDieDas.ai 레벨 테스트 실행 스크립트
+DerDieDas.ai 대시보드 실행 스크립트
 
 프로젝트 루트에서 실행하는 래퍼 스크립트입니다.
 
 사용법:
-    streamlit run run_level_test.py
+    streamlit run run_dashboard.py
 """
 
 import sys
@@ -22,12 +22,11 @@ if env_file.exists():
         for line in f:
             line = line.strip()
             if line and not line.startswith("#"):
-                key, value = line.split("=", 1)
-                os.environ[key.strip()] = value.strip()
-    print(f"✅ OPENAI_API_KEY 설정됨: {os.getenv('OPENAI_API_KEY')[:10]}..." if os.getenv('OPENAI_API_KEY') else "⚠️  OPENAI_API_KEY가 설정되지 않았습니다")
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    os.environ[key.strip()] = value.strip()
 else:
     print(f"⚠️  환경 변수 파일을 찾을 수 없습니다: {env_file}")
-    print(f"   AI 피드백 기능이 비활성화됩니다.")
 
 # src 폴더를 Python path에 추가
 src_path = project_root / "src"
@@ -35,8 +34,8 @@ sys.path.insert(0, str(src_path))
 
 # 실제 앱 임포트 및 실행
 if __name__ == "__main__":
-    # src/level_test/level_test_app.py 실행
-    app_path = project_root / "src" / "level_test" / "level_test_app.py"
+    # src/dashboard/dashboard_app.py 실행
+    app_path = project_root / "src" / "dashboard" / "dashboard_app.py"
 
     # Streamlit으로 실행
     os.system(f'streamlit run "{app_path}"')

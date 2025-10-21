@@ -9,9 +9,14 @@
 """
 
 import streamlit as st
+import sys
+from pathlib import Path
 from CEFR_Eval import LevelTestSession, CEFRLevel
 
-# 상대 임포트로 변경됨 (같은 폴더 내)
+# 프로필 관리를 위한 임포트
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root / "src"))
+from models import ProfileManager
 
 # =============================================================================
 # 페이지 설정
@@ -329,9 +334,22 @@ def show_result_screen():
     recommendations = get_recommendations(result["final_level"], result["sub_level"])
     st.success(recommendations)
 
-    # 재시작 버튼
+    # 하단 버튼
     st.markdown("---")
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🏠 대시보드로 이동", use_container_width=True, type="primary"):
+            # 레벨 결과를 프로필에 저장
+            try:
+                profile_manager = ProfileManager()
+                profile_manager.update_level_from_test(result['display_level'])
+                st.success("레벨이 프로필에 저장되었습니다!")
+            except Exception as e:
+                st.warning(f"프로필 저장 실패: {e}")
+
+            # 대시보드로 이동
+            st.switch_page("src/dashboard/dashboard_app.py")
+
     with col2:
         if st.button("🔄 테스트 다시 하기", use_container_width=True):
             # 세션 초기화

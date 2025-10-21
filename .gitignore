@@ -24,6 +24,9 @@ config/.env
 models_cache/
 outputs/
 
+# User data
+data/
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
