@@ -295,10 +295,23 @@ class CEFRCorpusLoader:
         In Proceedings of LREC'14 (pp. 1281-1288).
         """
         from datasets import load_dataset
+        import os
+        from pathlib import Path
+
+        # 프로젝트 루트에 캐시 디렉토리 설정
+        project_root = Path(__file__).parent.parent.parent
+        cache_dir = project_root / "models_cache" / "datasets"
+        cache_dir.mkdir(parents=True, exist_ok=True)
 
         print("📚 CEFR 라벨링된 독일어 코퍼스 로딩 중...")
         print("📄 MERLIN Corpus (CC BY-SA 4.0) - Boyd et al. (2014)")
-        dataset = load_dataset("UniversalCEFR/merlin_de", trust_remote_code=True)
+        print(f"💾 캐시 경로: {cache_dir}")
+
+        dataset = load_dataset(
+            "UniversalCEFR/merlin_de",
+            trust_remote_code=True,
+            cache_dir=str(cache_dir)
+        )
 
         # 데이터 구조 확인 및 정리
         self.corpus_data = {
