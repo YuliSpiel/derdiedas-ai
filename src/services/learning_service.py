@@ -27,17 +27,18 @@ class LearningService:
         self.api_required = api_required
         self.api_client = get_api_client()
 
-        # 폴백용 직접 호출 객체 (api_required=False일 때만 사용)
+        # 폴백용 직접 호출 객체 (항상 초기화하되, api_required=True면 사용 안 함)
+        # ProfileManager는 항상 필요 (API 실패 시 에러 발생해도 초기화는 필요)
+        self.profile_manager = ProfileManager()
+
         if not api_required:
             self.topic_selector = TopicSelector()
             self.content_generator = LearningContentGenerator()
             self.feedback_generator = WritingFeedbackGenerator()
-            self.profile_manager = ProfileManager()
         else:
             self.topic_selector = None
             self.content_generator = None
             self.feedback_generator = None
-            self.profile_manager = None
 
         # API 서버 상태 확인
         self.api_available = self.api_client.is_server_running()

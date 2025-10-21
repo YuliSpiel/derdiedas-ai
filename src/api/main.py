@@ -105,13 +105,18 @@ async def get_profile():
         raise HTTPException(status_code=500, detail=str(e))
 
 
+class UpdateLevelRequest(BaseModel):
+    level: str
+    skill_proficiency: Optional[Dict[str, float]] = None
+
+
 @app.post("/api/profile/update-level")
-async def update_level(level: str, skill_proficiency: Optional[Dict[str, float]] = None):
+async def update_level(request: UpdateLevelRequest):
     """레벨 테스트 결과 업데이트"""
     try:
         profile_manager = ProfileManager()
-        profile_manager.update_level_from_test(level, skill_proficiency)
-        return {"success": True, "level": level}
+        profile_manager.update_level_from_test(request.level, request.skill_proficiency)
+        return {"success": True, "level": request.level}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
