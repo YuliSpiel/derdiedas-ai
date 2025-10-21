@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add src/dashboard/dashboard_app.py)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: Simplify custom interest input in profile edit\n\n- Merged custom interest input into single multiselect\n- Allow direct text input with enter key in multiselect\n- Removed separate text input field for custom interests\n- Existing custom interests now appear in options list\n\nEOF\n)\")",
+      "Bash(pip install streamlit-tags)",
+      "Bash(git add src/dashboard/dashboard_app.py requirements.txt)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Add tag-based interest input with enter key support\n\n- Installed and integrated streamlit-tags library\n- Replaced multiselect with st_tags component\n- Users can now type and press enter to create interest tags\n- Suggestions from predefined list appear as autocomplete\n- Tags can be removed by clicking on them\n- Simplified profile edit form logic\n\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: Revert to multiselect + text input for interests\n\n- Removed streamlit-tags dependency\n- Multiselect for predefined interest options\n- Separate text input for custom interests with enter key support\n- Custom interests auto-add on enter keypress via on_change handler\n- Display added custom interests below input field\n\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: Revert to original interest input implementation\n\n- Multiselect for predefined interest options\n- Separate text input for custom interests (comma-separated)\n- Existing custom interests preserved in text field\n- Simpler form-based approach without session state complexity\n\nEOF\n)\")",
+      "Bash(tree -L 2 -I '__pycache__|*.pyc|models_cache|outputs' src/)",
+      "Bash(git add app.py pages/ .gitignore README.md requirements.txt)",
+      "Bash(git rm run_dashboard.py run_level_test.py)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: Migrate to Streamlit multipage app structure\n\n- Created main app.py as unified entry point with home page\n- Moved dashboard and level test to pages/ directory\n- Removed separate run_*.py launchers\n- Updated navigation to use sidebar instead of bottom buttons\n- Added python-dotenv for environment variable loading\n- Updated README.md with new structure and usage\n- Archived old run files\n\nBenefits:\n- Single app instance instead of multiple separate apps\n- Better UX with sidebar navigation\n- Reduced memory footprint\n- Industry-standard Streamlit multipage pattern\n- Cleaner project structure\n\nEOF\n)\")",
+      "Bash(git add -A)",
+      "Bash(git commit -m \"refactor: Rename page files to English-only names\n\n- Renamed 1_📚_대시보드.py to 1_dashboard.py\n- Renamed 2_📊_레벨테스트.py to 2_level_test.py\n- Updated README.md to reflect new filenames\n\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
