@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from datetime import datetime
 import uuid
+from streamlit_tags import st_tags
 
 # 프로젝트 루트를 Python path에 추가
 project_root = Path(__file__).parent.parent.parent
@@ -174,28 +175,18 @@ def show_profile_edit(profile: UserProfile):
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
 
-        # 관심사 (선택 + 직접 입력)
+        # 관심사 (태그 입력)
         interest_options = [
-            "여행",
-            "음악",
-            "IT",
-            "요리",
-            "스포츠",
-            "영화",
-            "독서",
-            "미술",
-            "패션",
-            "비즈니스",
+            "여행", "음악", "IT", "요리", "스포츠",
+            "영화", "독서", "미술", "패션", "비즈니스"
         ]
 
-        # 기존 관심사 중 목록에 없는 것들도 함께 표시
-        all_interest_options = list(set(interest_options + profile.interests))
-
-        new_interests = st.multiselect(
-            "관심사 (복수 선택, 직접 입력 가능)",
-            options=all_interest_options,
-            default=profile.interests,
-            help="목록에서 선택하거나 직접 입력 후 엔터를 누르세요"
+        new_interests = st_tags(
+            label="관심사 (선택 또는 입력 후 엔터)",
+            text="입력 후 엔터를 누르세요",
+            value=profile.interests,
+            suggestions=interest_options,
+            key="interests_tags"
         )
 
         # 목표
