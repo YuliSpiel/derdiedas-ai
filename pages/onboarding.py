@@ -139,7 +139,7 @@ def init_session_state():
     if "onboarding_data" not in st.session_state:
         st.session_state.onboarding_data = {
             "nickname": "",
-            "icon": "🎓",
+            "icon": "🐶",
             "interests": [],
             "goals": [],
         }
@@ -207,7 +207,7 @@ def show_step1():
     st.markdown('<div class="form-section">', unsafe_allow_html=True)
     st.markdown('<div class="section-title">프로필 아이콘 선택</div>', unsafe_allow_html=True)
 
-    icons = ["🎓", "📚", "✏️", "🌟", "🚀", "💡", "🎯", "🔥"]
+    icons = ["🐶", "🐱", "🐥", "🐯", "🐼", "🐻", "⛄️", "🩵"]
     selected_icon = st.session_state.onboarding_data["icon"]
 
     # 아이콘 선택 UI

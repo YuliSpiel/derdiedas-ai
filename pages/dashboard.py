@@ -184,7 +184,7 @@ def show_profile_edit(profile: UserProfile):
         new_nickname = st.text_input("닉네임", value=profile.nickname)
 
         # 아이콘 선택
-        icons = ["🎓", "📚", "✏️", "🌟", "🚀", "💡", "🎯", "🔥"]
+        icons = ["🐶", "🐱", "🐥", "🐯", "🐼", "🐻", "⛄️", "🩵"]
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
 
