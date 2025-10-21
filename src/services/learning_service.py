@@ -15,33 +15,46 @@ from src.models.user_profile import ProfileManager
 
 
 class LearningService:
-    """학습 관련 서비스 (API 우선 + 폴백)"""
+    """학습 관련 서비스 (100% API 모드)"""
 
-    def __init__(self, use_api: bool = True):
+    def __init__(self, api_required: bool = True):
         """
         Args:
-            use_api: API 사용 여부 (기본값: True, 자동 폴백)
+            api_required: API 필수 여부 (기본값: True)
+                         True: API 서버 없으면 에러 발생
+                         False: API 실패 시 직접 호출로 폴백
         """
-        self.use_api = use_api
-        self.api_client = get_api_client() if use_api else None
+        self.api_required = api_required
+        self.api_client = get_api_client()
 
-        # 폴백용 직접 호출 객체
-        self.topic_selector = TopicSelector()
-        self.content_generator = LearningContentGenerator()
-        self.feedback_generator = WritingFeedbackGenerator()
-        self.profile_manager = ProfileManager()
+        # 폴백용 직접 호출 객체 (api_required=False일 때만 사용)
+        if not api_required:
+            self.topic_selector = TopicSelector()
+            self.content_generator = LearningContentGenerator()
+            self.feedback_generator = WritingFeedbackGenerator()
+            self.profile_manager = ProfileManager()
+        else:
+            self.topic_selector = None
+            self.content_generator = None
+            self.feedback_generator = None
+            self.profile_manager = None
 
         # API 서버 상태 확인
-        if self.use_api:
-            self.api_available = self.api_client.is_server_running()
-            if not self.api_available:
-                print("⚠️ API 서버가 실행 중이 아닙니다. 직접 호출 모드로 전환합니다.")
-        else:
-            self.api_available = False
+        self.api_available = self.api_client.is_server_running()
+
+        if self.api_required and not self.api_available:
+            raise RuntimeError(
+                "❌ API 서버가 실행 중이 아닙니다!\n"
+                "다음 명령어로 API 서버를 시작하세요:\n"
+                "  python run_api.py\n"
+                "또는 http://localhost:8000 에서 서버 상태를 확인하세요."
+            )
+        elif not self.api_available:
+            print("⚠️ API 서버가 실행 중이 아닙니다. 직접 호출 모드로 전환합니다.")
 
     def _should_use_api(self) -> bool:
         """API 사용 여부 판단"""
-        return self.use_api and self.api_available
+        return self.api_available
 
     # ========== 주제 선정 ==========
 
@@ -66,10 +79,15 @@ class LearningService:
                 )
                 return result
             except Exception as e:
+                if self.api_required:
+                    raise RuntimeError(f"❌ API 호출 실패: {e}")
                 print(f"⚠️ API 호출 실패, 직접 호출로 폴백: {e}")
                 self.api_available = False
 
-        # 직접 호출 폴백
+        # 직접 호출 폴백 (api_required=False일 때만)
+        if self.api_required:
+            raise RuntimeError("❌ API 서버를 사용할 수 없습니다. python run_api.py로 서버를 시작하세요.")
+
         skill_id = self.topic_selector.select_topic(
             user_proficiency=user_proficiency,
             learning_count=learning_count,
@@ -124,10 +142,15 @@ class LearningService:
                 )
                 return result
             except Exception as e:
+                if self.api_required:
+                    raise RuntimeError(f"❌ API 호출 실패 (컨텐츠 생성): {e}")
                 print(f"⚠️ API 호출 실패, 직접 호출로 폴백: {e}")
                 self.api_available = False
 
-        # 직접 호출 폴백
+        # 직접 호출 폴백 (api_required=False일 때만)
+        if self.api_required:
+            raise RuntimeError("❌ API 서버를 사용할 수 없습니다. python run_api.py로 서버를 시작하세요.")
+
         return self.content_generator.generate_content(
             skill_id=skill_id,
             skill_name=skill_name,
@@ -170,10 +193,15 @@ class LearningService:
                 )
                 return result
             except Exception as e:
+                if self.api_required:
+                    raise RuntimeError(f"❌ API 호출 실패 (작문 피드백): {e}")
                 print(f"⚠️ API 호출 실패, 직접 호출로 폴백: {e}")
                 self.api_available = False
 
-        # 직접 호출 폴백
+        # 직접 호출 폴백 (api_required=False일 때만)
+        if self.api_required:
+            raise RuntimeError("❌ API 서버를 사용할 수 없습니다. python run_api.py로 서버를 시작하세요.")
+
         return self.feedback_generator.generate_feedback(
             user_text=user_text,
             task_prompt=task_prompt,
@@ -206,10 +234,15 @@ class LearningService:
                 )
                 return result
             except Exception as e:
+                if self.api_required:
+                    raise RuntimeError(f"❌ API 호출 실패 (학습 완료): {e}")
                 print(f"⚠️ API 호출 실패, 직접 호출로 폴백: {e}")
                 self.api_available = False
 
-        # 직접 호출 폴백
+        # 직접 호출 폴백 (api_required=False일 때만)
+        if self.api_required:
+            raise RuntimeError("❌ API 서버를 사용할 수 없습니다. python run_api.py로 서버를 시작하세요.")
+
         profile = self.profile_manager.load_profile()
 
         # 스킬 숙련도 업데이트
@@ -268,6 +301,33 @@ class LearningService:
         profile = self.profile_manager.load_profile()
         return profile.to_dict()
 
+    def update_level(
+        self,
+        level: str,
+        skill_proficiency: Dict[str, float] = None
+    ) -> Dict:
+        """레벨 테스트 결과 업데이트"""
+        if self._should_use_api():
+            try:
+                result = self.api_client.update_level(
+                    level=level,
+                    skill_proficiency=skill_proficiency
+                )
+                return result
+            except Exception as e:
+                print(f"⚠️ API 호출 실패, 직접 호출로 폴백: {e}")
+                self.api_available = False
+
+        # 직접 호출 폴백
+        self.profile_manager.update_level_from_test(
+            level=level,
+            skill_proficiency=skill_proficiency
+        )
+        return {
+            "success": True,
+            "message": "Level updated successfully"
+        }
+
     def get_notebooks(self) -> List[Dict]:
         """노트북 조회"""
         if self._should_use_api():
@@ -299,17 +359,24 @@ class LearningService:
 _learning_service = None
 
 
-def get_learning_service(use_api: bool = True) -> LearningService:
-    """학습 서비스 싱글톤 반환"""
+def get_learning_service(api_required: bool = True) -> LearningService:
+    """
+    학습 서비스 싱글톤 반환
+
+    Args:
+        api_required: API 필수 여부 (기본값: True)
+                     True: API 서버 없으면 에러 발생 (프로덕션 권장)
+                     False: API 실패 시 직접 호출로 폴백 (개발용)
+    """
     global _learning_service
     if _learning_service is None:
-        _learning_service = LearningService(use_api=use_api)
+        _learning_service = LearningService(api_required=api_required)
     return _learning_service
 
 
 if __name__ == "__main__":
     # 테스트
-    service = LearningService(use_api=True)
+    service = LearningService(api_required=True)
 
     print("=== 학습 서비스 테스트 ===")
     print(f"API 사용 가능: {service.api_available}\n")

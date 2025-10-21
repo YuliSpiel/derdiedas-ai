@@ -510,10 +510,19 @@ def main():
 
     init_session_state()
 
-    # 프로필 로드
+    # API 서비스를 통한 데이터 로드
+    learning_service = get_learning_service()
+
+    # 프로필 로드 (API)
+    profile_dict = learning_service.get_profile()
+    profile = UserProfile.from_dict(profile_dict)
+
+    # 노트북 로드 (API)
+    notebooks_data = learning_service.get_notebooks()
+    notebooks = [Notebook.from_dict(nb) for nb in notebooks_data]
+
+    # ProfileManager는 save 작업용으로만 유지
     profile_manager = st.session_state.profile_manager
-    profile = profile_manager.load_profile()
-    notebooks = profile_manager.load_notebooks()
 
     # 헤더
     st.title("🇩🇪 DerDieDas.ai")

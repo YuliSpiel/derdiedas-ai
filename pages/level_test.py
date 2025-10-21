@@ -18,6 +18,7 @@ sys.path.insert(0, str(project_root / "src"))
 
 from level_test.CEFR_Eval import LevelTestSession, CEFRLevel
 from models import ProfileManager
+from services.learning_service import get_learning_service
 
 # 테스트 모드 임포트 (프로덕션 배포 시 삭제)
 from utils.test_mode import render_test_sidebar
@@ -320,20 +321,24 @@ def show_result_screen():
 
     # 하단 버튼
     st.markdown("---")
-    # 레벨 결과 + 스킬 숙련도를 자동으로 프로필에 저장
+    # 레벨 결과 + 스킬 숙련도를 자동으로 프로필에 저장 (API)
     try:
-        profile_manager = ProfileManager()
+        learning_service = get_learning_service()
         skill_proficiency = result.get('skill_proficiency', {})
 
-        profile_manager.update_level_from_test(
+        # API를 통한 레벨 업데이트
+        api_result = learning_service.update_level(
             level=result['display_level'],
             skill_proficiency=skill_proficiency
         )
 
-        if skill_proficiency:
-            st.success(f"✅ 레벨과 스킬 숙련도({len(skill_proficiency)}개 스킬)가 프로필에 저장되었습니다!")
+        if api_result.get('success'):
+            if skill_proficiency:
+                st.success(f"✅ 레벨과 스킬 숙련도({len(skill_proficiency)}개 스킬)가 프로필에 저장되었습니다!")
+            else:
+                st.success("✅ 레벨이 프로필에 저장되었습니다!")
         else:
-            st.success("✅ 레벨이 프로필에 저장되었습니다!")
+            st.warning(f"프로필 저장 실패: {api_result.get('message', 'Unknown error')}")
 
     except Exception as e:
         st.warning(f"프로필 저장 실패: {e}")
