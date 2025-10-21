@@ -7,8 +7,6 @@ DerDieDas.ai 대시보드
 import streamlit as st
 import sys
 from pathlib import Path
-from datetime import datetime
-import uuid
 
 # 프로젝트 루트를 Python path에 추가
 project_root = Path(__file__).parent.parent
@@ -460,39 +458,40 @@ def show_create_notebook_button():
 
 
 def show_create_notebook_form():
-    """새 노트북 생성 폼"""
-    st.markdown("### ➕ 새 노트북 만들기")
+    """새 노트북 생성 폼 (스킬 기반)"""
+    # notebook_creator는 이미 src path에 있음
+    import sys
+    from pathlib import Path
+    project_root = Path(__file__).parent.parent
+    sys.path.insert(0, str(project_root / "src"))
 
-    with st.form("create_notebook_form"):
-        category = st.selectbox("카테고리", ["문법", "표현", "어휘", "독해", "작문"])
-        topic = st.text_input("주제 (예: 정관사, 출장 회화, 날씨 표현 등)")
+    from components.notebook_creator import show_notebook_creator_modal
 
-        col1, col2 = st.columns(2)
-        with col1:
-            submitted = st.form_submit_button("✅ 생성", use_container_width=True)
-        with col2:
-            cancelled = st.form_submit_button("취소", use_container_width=True)
+    # 노트북 생성 UI 표시
+    notebook_data = show_notebook_creator_modal()
 
-        if submitted:
-            if not topic.strip():
-                st.error("주제를 입력해 주세요.")
-            else:
-                # 새 노트북 생성
-                new_notebook = Notebook(
-                    id=f"nb_{uuid.uuid4().hex[:8]}",
-                    title=f"{category} · {topic}",
-                    category=category,
-                    topic=topic,
-                    created_at=datetime.now().isoformat(),
-                )
-                st.session_state.profile_manager.add_notebook(new_notebook)
-                st.session_state.show_create_notebook = False
-                st.success(f"'{new_notebook.title}' 노트북이 생성되었습니다!")
-                st.rerun()
+    if notebook_data:
+        # 노트북 생성
+        new_notebook = Notebook(
+            id=notebook_data["notebook_id"],
+            title=notebook_data["title"],
+            category=notebook_data["category"],
+            topic=notebook_data["topic"],
+            created_at=notebook_data["created_at"],
+            is_recommended=notebook_data.get("is_recommended", False),
+        )
+        st.session_state.profile_manager.add_notebook(new_notebook)
+        st.session_state.show_create_notebook = False
 
-        if cancelled:
-            st.session_state.show_create_notebook = False
-            st.rerun()
+        # 바로 학습 시작으로 이동
+        st.session_state.selected_notebook_id = new_notebook.id
+        st.switch_page("pages/learning_session.py")
+
+    # 취소 버튼
+    st.markdown("---")
+    if st.button("⬅️ 취소", use_container_width=True):
+        st.session_state.show_create_notebook = False
+        st.rerun()
 
 
 # =============================================================================

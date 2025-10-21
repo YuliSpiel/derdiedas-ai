@@ -1,15 +1,29 @@
 """
 노트북 생성 컴포넌트
 
-두 가지 모드:
-1. 학습 자료 업로드: 파일/URL로 학습 자료 제공
-2. 자료 없이 시작: AI가 사용자 수준에 맞게 자동 구성
+스킬 기반 노트북 생성
 """
 
 import streamlit as st
-from typing import Optional, List
+from typing import Optional, Dict, List
 import uuid
 from datetime import datetime
+from pathlib import Path
+import csv
+
+
+def load_skills() -> List[Dict]:
+    """스킬 데이터 로드"""
+    try:
+        skill_tree_path = Path("data/grammar_ontology/skill_tree.csv")
+        if skill_tree_path.exists():
+            with open(skill_tree_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                return list(reader)
+        return []
+    except Exception as e:
+        st.error(f"스킬 데이터 로드 실패: {e}")
+        return []
 
 
 def show_notebook_creator_modal() -> Optional[dict]:
@@ -21,134 +35,78 @@ def show_notebook_creator_modal() -> Optional[dict]:
     """
 
     st.markdown("## 📒 새 노트북 만들기")
-    st.markdown("어떤 주제를 공부할까요?")
+    st.markdown("학습할 스킬을 선택하세요")
 
-    # 기본 정보 입력
     st.markdown("---")
 
-    col1, col2 = st.columns(2)
+    # 스킬 데이터 로드
+    skills = load_skills()
+
+    if not skills:
+        st.error("스킬 데이터를 불러올 수 없습니다.")
+        return None
+
+    # CEFR 레벨별로 그룹화
+    skills_by_level = {}
+    for skill in skills:
+        level = skill['cefr']
+        if level not in skills_by_level:
+            skills_by_level[level] = []
+        skills_by_level[level].append(skill)
+
+    # 레벨 선택
+    col1, col2 = st.columns([1, 2])
 
     with col1:
-        domain = st.radio(
-            "분야",
-            options=["표현", "문법"],
-            horizontal=True,
-            key="notebook_domain"
+        selected_level = st.selectbox(
+            "CEFR 레벨",
+            options=sorted(skills_by_level.keys()),
+            key="skill_level"
         )
 
     with col2:
-        # 주제 제안
-        topic_suggestions = {
-            "표현": [
-                "여행 - 숙소 체크인",
-                "레스토랑 - 음식 주문",
-                "쇼핑 - 옷 구매",
-                "병원 - 증상 설명",
-                "직장 - 회의 참여",
-            ],
-            "문법": [
-                "현재완료 (Perfekt)",
-                "관사 - 격 변화",
-                "전치사 지배",
-                "분리동사",
-                "종속절 어순",
-            ]
-        }
+        # 선택된 레벨의 스킬 목록
+        level_skills = skills_by_level[selected_level]
 
-        topic = st.selectbox(
-            "주제",
-            options=topic_suggestions[domain] + ["직접 입력..."],
-            key="notebook_topic"
+        # 스킬 이름을 드롭다운 옵션으로 표시
+        skill_options = [f"{skill['name']} ({skill['area']})" for skill in level_skills]
+
+        selected_skill_idx = st.selectbox(
+            "스킬",
+            options=range(len(skill_options)),
+            format_func=lambda i: skill_options[i],
+            key="selected_skill"
         )
 
-        if topic == "직접 입력...":
-            topic = st.text_input("주제를 입력하세요", key="custom_topic")
+    selected_skill = level_skills[selected_skill_idx]
+
+    # 선택된 스킬 정보 표시
+    with st.container(border=True):
+        st.markdown(f"**{selected_skill['name']}**")
+        st.caption(f"📚 영역: {selected_skill['area']} | 🎯 레벨: {selected_skill['cefr']}")
+        if selected_skill.get('hint'):
+            st.info(f"💡 {selected_skill['hint']}")
 
     st.markdown("---")
 
-    # 두 가지 모드 선택
-    col_left, col_right = st.columns(2)
-
     notebook_data = None
 
-    with col_left:
-        st.markdown("### 📂 학습 자료 업로드")
-        st.caption("파일이나 URL을 제공하여 맞춤 학습")
+    # 노트북 생성 버튼
+    if st.button("📖 학습 시작", use_container_width=True, type="primary"):
+        # 노트북 생성
+        notebook_data = {
+            "notebook_id": f"nb_{selected_skill['skill_id']}",
+            "skill_id": selected_skill['skill_id'],
+            "title": selected_skill['name'],
+            "category": "Grammar",
+            "topic": selected_skill['area'],
+            "cefr_level": selected_skill['cefr'],
+            "created_at": datetime.now().isoformat(),
+            "is_recommended": False,
+        }
 
-        # 파일 업로드
-        uploaded_files = st.file_uploader(
-            "파일 업로드 (PDF, TXT, DOCX)",
-            type=["pdf", "txt", "docx"],
-            accept_multiple_files=True,
-            key="uploaded_files"
-        )
-
-        # URL 입력
-        url_input = st.text_area(
-            "또는 URL 입력 (한 줄에 하나씩)",
-            placeholder="https://example.com/lesson1\nhttps://example.com/lesson2",
-            height=100,
-            key="material_urls"
-        )
-
-        if st.button("📂 학습 시작 (자료 업로드)", use_container_width=True, type="primary"):
-            if not topic or topic == "직접 입력...":
-                st.error("주제를 입력해주세요")
-            elif not uploaded_files and not url_input.strip():
-                st.error("파일을 업로드하거나 URL을 입력해주세요")
-            else:
-                # 노트북 생성
-                material_urls = [url.strip() for url in url_input.split('\n') if url.strip()]
-
-                notebook_data = {
-                    "notebook_id": str(uuid.uuid4()),
-                    "title": topic,
-                    "domain": domain,
-                    "topic": topic,
-                    "created_at": datetime.now().isoformat(),
-                    "has_user_materials": True,
-                    "uploaded_files": [f.name for f in uploaded_files] if uploaded_files else [],
-                    "material_urls": material_urls,
-                    "auto_generated": False,
-                }
-
-                st.success(f"✅ 노트북 '{topic}' 생성 완료!")
-                st.info("업로드된 자료를 분석하여 학습 컨텐츠를 생성합니다...")
-
-    with col_right:
-        st.markdown("### 🤖 자료 없이 시작")
-        st.caption("사용자의 수준에 맞는 학습을 자동 구성합니다")
-
-        st.info("📊 현재 레벨과 스킬 숙련도를 기반으로 최적의 학습 경로를 생성합니다")
-
-        # 난이도 선택 (선택사항)
-        difficulty = st.selectbox(
-            "난이도 (선택사항)",
-            options=["자동 (프로필 기반)", "A1", "A2", "B1", "B2", "C1"],
-            key="difficulty"
-        )
-
-        if st.button("🤖 학습 시작 (AI 자동 구성)", use_container_width=True):
-            if not topic or topic == "직접 입력...":
-                st.error("주제를 입력해주세요")
-            else:
-                # AI 자동 생성 노트북
-                target_level = None if difficulty == "자동 (프로필 기반)" else difficulty
-
-                notebook_data = {
-                    "notebook_id": str(uuid.uuid4()),
-                    "title": topic,
-                    "domain": domain,
-                    "topic": topic,
-                    "created_at": datetime.now().isoformat(),
-                    "has_user_materials": False,
-                    "material_urls": [],
-                    "auto_generated": True,
-                    "target_cefr_level": target_level,
-                }
-
-                st.success(f"✅ 노트북 '{topic}' 생성 완료!")
-                st.info("AI가 학습 컨텐츠를 자동으로 구성합니다...")
+        st.success(f"✅ 노트북 '{selected_skill['name']}' 생성 완료!")
+        st.info("학습을 시작합니다...")
 
     return notebook_data
 
