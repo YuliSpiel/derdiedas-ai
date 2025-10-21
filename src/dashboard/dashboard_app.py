@@ -166,50 +166,6 @@ def show_profile_edit(profile: UserProfile):
     """프로필 수정 화면"""
     st.markdown("### ✏️ 프로필 수정")
 
-    # 관심사 세션 상태 초기화
-    if "temp_interests" not in st.session_state:
-        st.session_state.temp_interests = profile.interests.copy()
-    if "custom_interest_input" not in st.session_state:
-        st.session_state.custom_interest_input = ""
-
-    # 관심사 관리 (폼 외부)
-    st.markdown("**관심사**")
-
-    interest_options = [
-        "여행", "음악", "IT", "요리", "스포츠",
-        "영화", "독서", "미술", "패션", "비즈니스"
-    ]
-
-    # 기존 관심사 중 선택 항목에 없는 것들 추출
-    custom_interests = [i for i in st.session_state.temp_interests if i not in interest_options]
-    selected_from_list = [i for i in st.session_state.temp_interests if i in interest_options]
-
-    # multiselect로 기본 옵션 선택
-    selected = st.multiselect(
-        "관심사 선택",
-        interest_options,
-        default=selected_from_list,
-        label_visibility="collapsed"
-    )
-
-    # 커스텀 입력
-    custom_input = st.text_input(
-        "기타 관심사 추가 (입력 후 엔터)",
-        key="custom_interest_field",
-        placeholder="예: 게임, 사진, 디자인",
-        label_visibility="collapsed",
-        on_change=lambda: add_custom_interest()
-    )
-
-    # 현재 커스텀 관심사 표시
-    if custom_interests:
-        st.caption(f"추가된 관심사: {', '.join(custom_interests)}")
-
-    # 선택된 항목과 커스텀 항목 합치기
-    st.session_state.temp_interests = selected + custom_interests
-
-    st.markdown("---")
-
     with st.form("profile_edit_form"):
         new_nickname = st.text_input("닉네임", value=profile.nickname)
 
@@ -217,6 +173,41 @@ def show_profile_edit(profile: UserProfile):
         icons = ["🎓", "📚", "✏️", "🌟", "🚀", "💡", "🎯", "🔥"]
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
+
+        # 관심사
+        interest_options = [
+            "여행",
+            "음악",
+            "IT",
+            "요리",
+            "스포츠",
+            "영화",
+            "독서",
+            "미술",
+            "패션",
+            "비즈니스",
+        ]
+
+        # 기존 관심사 중 목록에 없는 것들 추가
+        existing_custom_interests = [i for i in profile.interests if i not in interest_options]
+
+        new_interests = st.multiselect(
+            "관심사 (복수 선택)",
+            interest_options,
+            default=[i for i in profile.interests if i in interest_options]
+        )
+
+        # 커스텀 관심사 입력
+        custom_interest = st.text_input(
+            "기타 관심사 (직접 입력, 쉼표로 구분)",
+            value=", ".join(existing_custom_interests),
+            placeholder="예: 게임, 사진, 디자인"
+        )
+
+        # 커스텀 관심사 파싱
+        if custom_interest.strip():
+            custom_list = [i.strip() for i in custom_interest.split(",") if i.strip()]
+            new_interests.extend(custom_list)
 
         # 목표
         goal_options = ["회화", "문법", "작문", "독해", "시험 대비", "비즈니스 독일어", "여행", "취미", "유학 준비"]
@@ -231,35 +222,16 @@ def show_profile_edit(profile: UserProfile):
         if submitted:
             profile.nickname = new_nickname
             profile.profile_icon = new_icon
-            profile.interests = st.session_state.temp_interests
+            profile.interests = new_interests
             profile.goals = new_goals
             st.session_state.profile_manager.save_profile(profile)
             st.session_state.show_profile_edit = False
-            # 세션 상태 초기화
-            del st.session_state.temp_interests
-            if "custom_interest_field" in st.session_state:
-                del st.session_state.custom_interest_field
             st.success("프로필이 업데이트되었습니다!")
             st.rerun()
 
         if cancelled:
             st.session_state.show_profile_edit = False
-            # 세션 상태 초기화
-            if "temp_interests" in st.session_state:
-                del st.session_state.temp_interests
-            if "custom_interest_field" in st.session_state:
-                del st.session_state.custom_interest_field
             st.rerun()
-
-
-def add_custom_interest():
-    """커스텀 관심사 추가 핸들러"""
-    if st.session_state.custom_interest_field.strip():
-        new_items = [item.strip() for item in st.session_state.custom_interest_field.split(",")]
-        for item in new_items:
-            if item and item not in st.session_state.temp_interests:
-                st.session_state.temp_interests.append(item)
-        st.session_state.custom_interest_field = ""
 
 
 # =============================================================================
