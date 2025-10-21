@@ -325,8 +325,9 @@ class ProfileManager:
 
     def _create_default_notebooks(self) -> List[Notebook]:
         """기본 노트북 생성 (최초 실행 시에만)"""
-        # 최초에는 추천 로직 사용
-        return self.generate_recommended_notebooks(count=2)
+        # 최초에는 빈 리스트 반환
+        # 추천 노트북은 레벨 테스트 완료 후에만 생성됨
+        return []
 
     def _fallback_notebooks(self) -> List[Notebook]:
         """기본 노트북 (폴백)"""
