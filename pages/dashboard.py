@@ -187,26 +187,38 @@ def show_profile_edit(profile: UserProfile):
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
 
-        # 배경색 선택
-        bg_colors = {
-            "보라 그라디언트": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            "파란 그라디언트": "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)",
-            "핑크 그라디언트": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-            "초록 그라디언트": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-            "오렌지 그라디언트": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-            "민트 그라디언트": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-        }
+        # 배경색 선택 (이모지 포함 옵션들을 3열로 배치)
+        st.markdown("**배경색 선택**")
 
-        # 현재 배경색 찾기
-        current_bg_name = "보라 그라디언트"
-        for name, color in bg_colors.items():
-            if color == profile.profile_bg_color:
-                current_bg_name = name
+        bg_colors = [
+            ("🟣 보라", "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"),
+            ("🔵 파랑", "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)"),
+            ("🩷 핑크", "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"),
+            ("🩵 청록", "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"),
+            ("🧡 오렌지", "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"),
+            ("💚 민트", "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"),
+        ]
+
+        # 현재 배경색 인덱스 찾기
+        current_idx = 0
+        for idx, (_, gradient) in enumerate(bg_colors):
+            if gradient == profile.profile_bg_color:
+                current_idx = idx
                 break
 
-        bg_idx = list(bg_colors.keys()).index(current_bg_name) if current_bg_name in bg_colors else 0
-        new_bg_name = st.selectbox("배경색", list(bg_colors.keys()), index=bg_idx)
-        new_bg_color = bg_colors[new_bg_name]
+        # 3열 라디오 버튼 배치
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            choice1 = st.radio("", [bg_colors[0][0], bg_colors[1][0]], index=0 if current_idx in [0, 1] else (1 if current_idx == 1 else 0), key="bg_col1", label_visibility="collapsed")
+        with col2:
+            choice2 = st.radio("", [bg_colors[2][0], bg_colors[3][0]], index=0 if current_idx in [2, 3] else (1 if current_idx == 3 else 0), key="bg_col2", label_visibility="collapsed")
+        with col3:
+            choice3 = st.radio("", [bg_colors[4][0], bg_colors[5][0]], index=0 if current_idx in [4, 5] else (1 if current_idx == 5 else 0), key="bg_col3", label_visibility="collapsed")
+
+        # 선택된 배경색 찾기
+        selected_name = choice1 if choice1 in [bg_colors[0][0], bg_colors[1][0]] else (choice2 if choice2 in [bg_colors[2][0], bg_colors[3][0]] else choice3)
+        new_bg_color = next((gradient for name, gradient in bg_colors if name == selected_name), bg_colors[0][1])
 
         # 관심사
         interest_options = [
