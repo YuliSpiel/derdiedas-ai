@@ -493,6 +493,18 @@ def show_completion_stage():
                     # 저장
                     profile_manager.save_profile(profile)
 
+                    # 노트북 세션 업데이트 (세션 수와 마지막 학습 날짜)
+                    session = st.session_state.learning_session
+                    if session and session.notebook_id:
+                        notebooks = profile_manager.load_notebooks()
+                        for nb in notebooks:
+                            if nb.id == session.notebook_id:
+                                nb.total_sessions += 1
+                                from datetime import datetime
+                                nb.last_studied = datetime.now().strftime("%m/%d")
+                                break
+                        profile_manager.save_notebooks(notebooks)
+
                     st.session_state.proficiency_updated = True
 
                     st.info(f"📈 스킬 숙련도: {current_proficiency:.1f} → {new_proficiency:.1f} ({proficiency_change:+.1f})")
@@ -533,9 +545,9 @@ def main():
         st.markdown("## 🚀 학습 준비 중...")
 
         with st.spinner("주제를 선정하고 학습 자료를 생성하는 중..."):
-            # TODO: 실제 노트북 ID 받아오기
-            # 지금은 테스트용
-            session = create_learning_session("test-notebook-id")
+            # 대시보드에서 전달받은 노트북 ID 사용
+            notebook_id = st.session_state.get("selected_notebook_id", "test-notebook-id")
+            session = create_learning_session(notebook_id)
 
             if session:
                 st.session_state.learning_session = session
