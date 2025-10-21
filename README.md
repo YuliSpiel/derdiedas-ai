@@ -117,6 +117,44 @@ streamlit run app.py
 - **코사인 유사도 기반 평가**: 완전 무료 (로컬 모델)
 - **AI 피드백**: GPT-4o mini API 호출 (~$0.001-0.002/테스트)
 
+## 데이터 출처 및 인용
+
+본 프로젝트는 다음 오픈 라이센스 데이터를 사용합니다:
+
+### 1. MERLIN 코퍼스 (독일어 레벨 테스트)
+
+독일어 레벨 평가를 위해 MERLIN (Multilingual platform for European Reference Levels: Interlanguage Exploration) 코퍼스의 독일어 학습자 텍스트 데이터를 사용합니다.
+
+- **데이터셋**: MERLIN German Corpus
+- **출처**: [UniversalCEFR/merlin_de](https://huggingface.co/datasets/UniversalCEFR/merlin_de)
+- **라이센스**: CC BY-SA 4.0
+
+**인용:**
+```bibtex
+@inproceedings{boyd2014merlin,
+  title={The MERLIN corpus: Learner language and the CEFR},
+  author={Boyd, Adriane and Hana, Jirka and Nicolas, Lionel and Meurers, Detmar and Wis{\'n}iewski, Katrin and Abel, Andrea and Schöne, Karin and Stindlov{\'a}, Barbora and Vettori, Chiara},
+  booktitle={Proceedings of the Ninth International Conference on Language Resources and Evaluation (LREC'14)},
+  pages={1281--1288},
+  year={2014}
+}
+```
+
+**참고 문헌:**
+Boyd, A., Hana, J., Nicolas, L., Meurers, D., Wisniewski, K., Abel, A., Schöne, K., Stindlová, B., & Vettori, C. (2014). The MERLIN corpus: Learner language and the CEFR. In *Proceedings of the Ninth International Conference on Language Resources and Evaluation (LREC'14)* (pp. 1281-1288).
+
+### 2. Deutsch im Blick (문법 학습 콘텐츠)
+
+독일어 문법 학습을 위한 구조화된 데이터로 활용합니다.
+
+- **출처**: Grammar to Accompany Deutsch im Blick
+- **저자**: Zsuzsanna Abrams et al.
+- **라이센스**: [CC BY 4.0 International](https://creativecommons.org/licenses/by/4.0/)
+- **수정 사항**: 구조화된 데이터셋으로 변환 (CSV/JSON)
+
+**참고 문헌:**
+Abrams, Z., et al. *Grammar to Accompany Deutsch im Blick*. Licensed under CC BY 4.0. https://creativecommons.org/licenses/by/4.0/
+
 ## 개발 로드맵
 
 - [x] CEFR 기반 레벨 테스트
