@@ -131,7 +131,6 @@ class ProfileManager:
         """레벨 테스트 결과 반영 (레벨 + 스킬 숙련도)"""
         profile = self.load_profile()
         profile.level = level
-        profile.total_stamps += 1  # 테스트 완료로 스탬프 +1
 
         # 스킬 숙련도 업데이트
         if skill_proficiency:

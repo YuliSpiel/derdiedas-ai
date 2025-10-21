@@ -527,6 +527,13 @@ def main():
         if st.button(
             "📊 레벨 테스트 하러 가기", use_container_width=True, type="primary"
         ):
+            # 레벨 테스트 세션 초기화
+            if "test_session" in st.session_state:
+                del st.session_state.test_session
+            if "initialized" in st.session_state:
+                del st.session_state.initialized
+            if "show_result" in st.session_state:
+                del st.session_state.show_result
             st.switch_page("pages/level_test.py")
     with col2:
         if st.button(
