@@ -8,26 +8,28 @@ An interactive German learning assistant designed to help users improve their Ge
 
 ```
 derdiedas-ai.ai/
-├── src/                          # 소스 코드
+├── app.py                       # 메인 진입점 (홈 페이지)
+├── pages/                       # Streamlit 멀티페이지
+│   ├── 1_📚_대시보드.py         # 대시보드 페이지
+│   └── 2_📊_레벨테스트.py       # 레벨 테스트 페이지
+├── src/                         # 소스 코드
 │   ├── level_test/              # 레벨 테스트 모듈
-│   │   ├── CEFR_Eval.py        # 평가 로직 (코사인 유사도 + AI 피드백)
-│   │   ├── level_test_app.py   # Streamlit UI
+│   │   ├── CEFR_Eval.py        # 평가 로직
 │   │   └── __init__.py
+│   ├── models/                  # 데이터 모델
+│   │   ├── user_profile.py     # 사용자 프로필 및 노트북
+│   │   └── __init__.py
+│   ├── dashboard/               # 대시보드 (원본 소스)
 │   └── utils/                   # 유틸리티
-│       ├── parse_pipeline.py
-│       ├── utils_io_and_stats.py
-│       └── __init__.py
 ├── notebooks/                   # Jupyter 노트북
-│   └── lang_eval.ipynb
 ├── docs/                        # 문서
-│   └── README_LEVEL_TEST.md    # 레벨 테스트 상세 문서
 ├── config/                      # 설정 파일
 │   └── .env                     # 환경 변수 (API 키 등)
+├── data/                        # 사용자 데이터 (gitignore)
 ├── models_cache/                # 모델 캐시 (gitignore)
 ├── outputs/                     # 출력 파일 (gitignore)
-├── run_level_test.py           # 레벨 테스트 실행 스크립트
-├── requirements.txt            # Python 의존성
-└── README.md                   # 이 파일
+├── requirements.txt             # Python 의존성
+└── README.md                    # 이 파일
 
 ```
 
@@ -80,24 +82,15 @@ export OPENAI_API_KEY="your-api-key-here"
 
 ### 4. 앱 실행
 
-**대시보드 (메인 화면):**
+**통합 앱 실행 (권장):**
 ```bash
-streamlit run run_dashboard.py
+streamlit run app.py
 ```
 
-**레벨 테스트:**
-```bash
-streamlit run run_level_test.py
-```
-
-**직접 실행:**
-```bash
-# 대시보드
-streamlit run src/dashboard/dashboard_app.py
-
-# 레벨 테스트
-streamlit run src/level_test/level_test_app.py
-```
+앱이 실행되면 왼쪽 사이드바에서 다음 페이지로 이동할 수 있습니다:
+- 🏠 **app** - 홈 페이지
+- 📚 **대시보드** - 프로필 및 노트북 관리
+- 📊 **레벨테스트** - CEFR 기반 독일어 레벨 테스트
 
 ## 기술 스택
 
