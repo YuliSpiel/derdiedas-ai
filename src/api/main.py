@@ -114,10 +114,20 @@ class UpdateLevelRequest(BaseModel):
 async def update_level(request: UpdateLevelRequest):
     """레벨 테스트 결과 업데이트"""
     try:
+        # 디버깅 로그
+        print(f"\n📊 레벨 업데이트 요청:")
+        print(f"   레벨: {request.level}")
+        print(f"   스킬 숙련도: {request.skill_proficiency}")
+        if request.skill_proficiency:
+            print(f"   스킬 개수: {len(request.skill_proficiency)}")
+        else:
+            print(f"   ⚠️ 스킬 숙련도 데이터 없음!")
+
         profile_manager = ProfileManager()
         profile_manager.update_level_from_test(request.level, request.skill_proficiency)
-        return {"success": True, "level": request.level}
+        return {"success": True, "level": request.level, "skill_count": len(request.skill_proficiency) if request.skill_proficiency else 0}
     except Exception as e:
+        print(f"❌ 레벨 업데이트 에러: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
