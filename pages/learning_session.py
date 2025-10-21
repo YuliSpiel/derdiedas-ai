@@ -23,6 +23,7 @@ from models import ProfileManager
 from models.learning_cycle import LearningSession, LearningStage
 from learning.topic_selector import TopicSelector
 from learning.content_generator import LearningContentGenerator
+from learning.writing_feedback import WritingFeedbackGenerator
 
 # =============================================================================
 # 페이지 설정
@@ -91,6 +92,10 @@ def init_session_state():
         st.session_state.quiz_answers = {}
     if "show_korean" not in st.session_state:
         st.session_state.show_korean = False
+    if "writing_feedback" not in st.session_state:
+        st.session_state.writing_feedback = None
+    if "selected_skill_id" not in st.session_state:
+        st.session_state.selected_skill_id = None
 
 
 # =============================================================================
@@ -344,7 +349,8 @@ def show_writing_stage():
         "작문",
         height=200,
         placeholder="여기에 독일어로 작성하세요...",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="user_writing_input"
     )
 
     col1, col2 = st.columns(2)
@@ -353,9 +359,30 @@ def show_writing_stage():
             if not user_writing.strip():
                 st.error("작문을 입력해주세요!")
             else:
-                st.session_state.user_writing = user_writing
-                st.session_state.learning_session.current_stage = LearningStage.COMPLETED
-                st.rerun()
+                # 피드백 생성
+                with st.spinner("AI가 피드백을 생성하는 중..."):
+                    try:
+                        generator = WritingFeedbackGenerator()
+                        profile_manager = ProfileManager()
+                        profile = profile_manager.load_profile()
+
+                        feedback = generator.generate_feedback(
+                            user_text=user_writing,
+                            task_prompt=task['prompt_ko'],
+                            target_grammar=task['target_grammar'],
+                            user_cefr_level=profile.level.split('-')[0] if '-' in profile.level else profile.level
+                        )
+
+                        st.session_state.writing_feedback = feedback
+                        st.session_state.user_writing = user_writing
+                        st.session_state.learning_session.current_stage = LearningStage.COMPLETED
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"피드백 생성 중 오류가 발생했습니다: {e}")
+    with col2:
+        if st.button("⬅️ 뒤로", use_container_width=True):
+            st.session_state.learning_session.current_stage = LearningStage.QUIZ
+            st.rerun()
 
 
 # =============================================================================
@@ -369,28 +396,107 @@ def show_completion_stage():
 
     st.markdown("## 🎉 학습 완료!")
 
+    # 작문 피드백 표시
+    if st.session_state.writing_feedback:
+        feedback = st.session_state.writing_feedback
+
+        st.markdown("### ✍️ 작문 피드백")
+
+        # 점수
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("문법", f"{feedback['grammar_score']}/5")
+        with col2:
+            st.metric("어휘", f"{feedback['vocabulary_score']}/5")
+        with col3:
+            st.metric("과제 완성도", f"{feedback['task_completion_score']}/5")
+
+        st.markdown("---")
+
+        # 긍정적 피드백
+        if feedback.get('positive_feedback'):
+            with st.container(border=True):
+                st.markdown("#### ✨ 잘한 점")
+                for item in feedback['positive_feedback']:
+                    st.success(f"• {item}")
+
+        # 교정 사항
+        if feedback.get('corrections') and len(feedback['corrections']) > 0:
+            with st.container(border=True):
+                st.markdown("#### 🔧 교정 사항")
+                for correction in feedback['corrections']:
+                    st.error(f"**원문:** {correction['original']}")
+                    st.success(f"**교정:** {correction['corrected']}")
+                    st.info(f"💡 {correction['explanation']}")
+                    st.markdown("---")
+
+        # 개선 팁
+        if feedback.get('improvement_tips'):
+            with st.container(border=True):
+                st.markdown("#### 💡 다음 학습을 위한 조언")
+                for tip in feedback['improvement_tips']:
+                    st.warning(f"• {tip}")
+
+    st.markdown("---")
+
+    # 보상
     with st.container(border=True):
-        st.success("이번 학습 사이클을 성공적으로 완료했습니다!")
-
-        # 스탬프 추가
         st.markdown("### 🏆 보상")
-        st.info("✨ 스탬프 +1 획득!")
+        st.success("✨ 스탬프 +1 획득!")
 
-        # TODO: 실제 스탬프 추가 로직
-        # TODO: 스킬 숙련도 업데이트
-        # TODO: 학습 횟수 업데이트
+        # 숙련도 업데이트 (한 번만 실행)
+        if "proficiency_updated" not in st.session_state or not st.session_state.proficiency_updated:
+            try:
+                profile_manager = ProfileManager()
+                profile = profile_manager.load_profile()
+
+                skill_id = st.session_state.selected_skill_id
+                if skill_id and st.session_state.writing_feedback:
+                    proficiency_change = st.session_state.writing_feedback.get('skill_proficiency_change', 0)
+
+                    # 현재 숙련도
+                    current_proficiency = profile.skill_proficiency.get(skill_id, 0)
+                    new_proficiency = min(100, max(0, current_proficiency + proficiency_change))
+
+                    # 업데이트
+                    profile.skill_proficiency[skill_id] = new_proficiency
+
+                    # 학습 횟수 증가
+                    if skill_id not in profile.skill_learning_count:
+                        profile.skill_learning_count[skill_id] = 0
+                    profile.skill_learning_count[skill_id] += 1
+
+                    # 스탬프 추가
+                    profile.stamps_earned += 1
+
+                    # 저장
+                    profile_manager.save_profile(profile)
+
+                    st.session_state.proficiency_updated = True
+
+                    st.info(f"📈 스킬 숙련도: {current_proficiency:.1f} → {new_proficiency:.1f} ({proficiency_change:+.1f})")
+
+            except Exception as e:
+                st.error(f"프로필 업데이트 오류: {e}")
 
     st.markdown("---")
 
     col1, col2 = st.columns(2)
     with col1:
         if st.button("🏠 대시보드로", use_container_width=True, type="primary"):
+            # 리셋
+            st.session_state.learning_session = None
+            st.session_state.learning_content = None
+            st.session_state.writing_feedback = None
+            st.session_state.proficiency_updated = False
             st.switch_page("pages/dashboard.py")
     with col2:
         if st.button("🔄 다시 학습하기", use_container_width=True):
             # 세션 리셋
             st.session_state.learning_session = None
             st.session_state.learning_content = None
+            st.session_state.writing_feedback = None
+            st.session_state.proficiency_updated = False
             st.rerun()
 
 
@@ -454,6 +560,9 @@ def create_learning_session(notebook_id: str) -> LearningSession:
         skill_info = selector.get_skill_info(selected_skill)
 
         st.success(f"📚 주제: {skill_info['name']}")
+
+        # 스킬 ID 저장
+        st.session_state.selected_skill_id = selected_skill
 
         # 3. 컨텐츠 생성
         generator = LearningContentGenerator()
