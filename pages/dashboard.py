@@ -179,6 +179,56 @@ def show_profile_edit(profile: UserProfile):
     """프로필 수정 화면"""
     st.markdown("### ✏️ 프로필 수정")
 
+    # 세션에 임시 배경색 저장
+    if "temp_bg_color" not in st.session_state:
+        st.session_state.temp_bg_color = profile.profile_bg_color
+
+    # 배경색 선택 (form 밖에서 처리)
+    st.markdown("**배경색 선택**")
+
+    bg_colors = [
+        ("보라", "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"),
+        ("파랑", "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)"),
+        ("핑크", "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"),
+        ("청록", "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"),
+        ("오렌지", "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"),
+        ("민트", "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"),
+    ]
+
+    # 색상 버튼을 3열로 배치
+    cols = st.columns(3)
+    for idx, (name, gradient) in enumerate(bg_colors):
+        with cols[idx % 3]:
+            is_selected = st.session_state.temp_bg_color == gradient
+            border_style = "3px solid #667eea" if is_selected else "2px solid #ddd"
+
+            # 색상 프리뷰 버튼 (HTML + CSS)
+            button_html = f"""
+            <div style="
+                background: {gradient};
+                height: 60px;
+                border-radius: 8px;
+                border: {border_style};
+                cursor: pointer;
+                margin: 5px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            ">
+                {name}
+            </div>
+            """
+            st.markdown(button_html, unsafe_allow_html=True)
+
+            if st.button(f"선택###{idx}", key=f"bg_btn_{idx}", use_container_width=True, type="primary" if is_selected else "secondary"):
+                st.session_state.temp_bg_color = gradient
+                st.rerun()
+
+    st.markdown("---")
+
     with st.form("profile_edit_form"):
         new_nickname = st.text_input("닉네임", value=profile.nickname)
 
@@ -186,39 +236,6 @@ def show_profile_edit(profile: UserProfile):
         icons = ["🐶", "🐱", "🐥", "🐯", "🐼", "🐻", "⛄️", "🩵"]
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
-
-        # 배경색 선택 (이모지 포함 옵션들을 3열로 배치)
-        st.markdown("**배경색 선택**")
-
-        bg_colors = [
-            ("🟣 보라", "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"),
-            ("🔵 파랑", "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)"),
-            ("🩷 핑크", "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"),
-            ("🩵 청록", "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"),
-            ("🧡 오렌지", "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"),
-            ("💚 민트", "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"),
-        ]
-
-        # 현재 배경색 인덱스 찾기
-        current_idx = 0
-        for idx, (_, gradient) in enumerate(bg_colors):
-            if gradient == profile.profile_bg_color:
-                current_idx = idx
-                break
-
-        # 3열 라디오 버튼 배치
-        col1, col2, col3 = st.columns(3)
-
-        with col1:
-            choice1 = st.radio("", [bg_colors[0][0], bg_colors[1][0]], index=0 if current_idx in [0, 1] else (1 if current_idx == 1 else 0), key="bg_col1", label_visibility="collapsed")
-        with col2:
-            choice2 = st.radio("", [bg_colors[2][0], bg_colors[3][0]], index=0 if current_idx in [2, 3] else (1 if current_idx == 3 else 0), key="bg_col2", label_visibility="collapsed")
-        with col3:
-            choice3 = st.radio("", [bg_colors[4][0], bg_colors[5][0]], index=0 if current_idx in [4, 5] else (1 if current_idx == 5 else 0), key="bg_col3", label_visibility="collapsed")
-
-        # 선택된 배경색 찾기
-        selected_name = choice1 if choice1 in [bg_colors[0][0], bg_colors[1][0]] else (choice2 if choice2 in [bg_colors[2][0], bg_colors[3][0]] else choice3)
-        new_bg_color = next((gradient for name, gradient in bg_colors if name == selected_name), bg_colors[0][1])
 
         # 관심사
         interest_options = [
@@ -268,16 +285,22 @@ def show_profile_edit(profile: UserProfile):
         if submitted:
             profile.nickname = new_nickname
             profile.profile_icon = new_icon
-            profile.profile_bg_color = new_bg_color
+            profile.profile_bg_color = st.session_state.temp_bg_color
             profile.interests = new_interests
             profile.goals = new_goals
             st.session_state.profile_manager.save_profile(profile)
             st.session_state.show_profile_edit = False
+            # 세션 초기화
+            if "temp_bg_color" in st.session_state:
+                del st.session_state.temp_bg_color
             st.success("프로필이 업데이트되었습니다!")
             st.rerun()
 
         if cancelled:
             st.session_state.show_profile_edit = False
+            # 세션 초기화
+            if "temp_bg_color" in st.session_state:
+                del st.session_state.temp_bg_color
             st.rerun()
 
 
