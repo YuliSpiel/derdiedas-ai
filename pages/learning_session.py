@@ -578,37 +578,59 @@ def create_learning_session(notebook_id: str) -> LearningSession:
         profile_manager = ProfileManager()
         profile = profile_manager.load_profile()
 
-        # 2. 주제 선정
-        selector = TopicSelector()
-        selected_skill = selector.select_topic(
-            user_proficiency=profile.skill_proficiency,
-            learning_count=profile.skill_learning_count,
-            domain_filter="Grammar"
-        )
+        # 2. 노트북 정보 로드
+        notebooks = profile_manager.load_notebooks()
+        current_notebook = next((nb for nb in notebooks if nb.id == notebook_id), None)
 
-        if not selected_skill:
-            st.error("선택 가능한 주제가 없습니다.")
+        if not current_notebook:
+            st.error("노트북을 찾을 수 없습니다.")
             return None
 
-        skill_info = selector.get_skill_info(selected_skill)
+        # 3. 주제 선정: 추천 노트북 vs 사용자 노트북
+        selector = TopicSelector()
 
-        st.success(f"📚 주제: {skill_info['name']}")
+        if current_notebook.is_recommended:
+            # 추천 노트북: 적응형 주제 선정 (숙련도 기반)
+            selected_skill = selector.select_topic(
+                user_proficiency=profile.skill_proficiency,
+                learning_count=profile.skill_learning_count,
+                domain_filter="Grammar"
+            )
+
+            if not selected_skill:
+                st.error("선택 가능한 주제가 없습니다.")
+                return None
+
+            st.success(f"📚 적응형 주제: {selector.get_skill_info(selected_skill)['name']}")
+
+        else:
+            # 사용자 노트북: 고정 스킬
+            if not current_notebook.skill_id:
+                st.error("노트북에 스킬 정보가 없습니다.")
+                return None
+
+            selected_skill = current_notebook.skill_id
+            st.success(f"📚 선택한 주제: {selector.get_skill_info(selected_skill)['name']}")
+
+        skill_info = selector.get_skill_info(selected_skill)
 
         # 스킬 ID 저장
         st.session_state.selected_skill_id = selected_skill
 
-        # 3. 컨텐츠 생성
+        # 4. 컨텐츠 생성 (사용자 관심사/목표 반영)
         generator = LearningContentGenerator()
         content = generator.generate_content(
             skill_id=selected_skill,
             skill_name=skill_info['name'],
             skill_description=skill_info.get('name', ''),
-            user_cefr_level=profile.level.split('-')[0] if '-' in profile.level else profile.level
+            user_cefr_level=profile.level.split('-')[0] if '-' in profile.level else profile.level,
+            user_interests=profile.interests,  # 관심사 반영
+            user_goals=profile.goals  # 목표 반영
         )
 
         st.session_state.learning_content = content
 
-        # 4. 세션 생성
+        # 5. 세션 생성
         session = LearningSession(
             session_id=str(uuid.uuid4()),
             notebook_id=notebook_id,

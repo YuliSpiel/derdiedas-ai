@@ -31,6 +31,8 @@ class LearningContentGenerator:
         skill_name: str,
         skill_description: str,
         user_cefr_level: str = "A2",
+        user_interests: list = None,
+        user_goals: list = None,
         model: str = "gpt-4o-mini"
     ) -> Dict:
         """
@@ -41,6 +43,8 @@ class LearningContentGenerator:
             skill_name: 스킬 이름 (예: Definite article – nominative)
             skill_description: 스킬 설명 (한국어)
             user_cefr_level: 사용자 CEFR 레벨
+            user_interests: 사용자 관심사 (예: ["여행", "음악", "IT"])
+            user_goals: 사용자 목표 (예: ["회화", "문법"])
             model: 사용할 GPT 모델
 
         Returns:
@@ -54,7 +58,8 @@ class LearningContentGenerator:
         """
 
         prompt = self._build_content_generation_prompt(
-            skill_id, skill_name, skill_description, user_cefr_level
+            skill_id, skill_name, skill_description, user_cefr_level,
+            user_interests or [], user_goals or []
         )
 
         try:
@@ -90,9 +95,15 @@ class LearningContentGenerator:
         skill_id: str,
         skill_name: str,
         skill_description: str,
-        user_cefr_level: str
+        user_cefr_level: str,
+        user_interests: list,
+        user_goals: list
     ) -> str:
         """컨텐츠 생성 프롬프트 구성"""
+
+        # 관심사/목표 문자열 생성
+        interests_str = ", ".join(user_interests) if user_interests else "일반적인 주제"
+        goals_str = ", ".join(user_goals) if user_goals else "전반적인 독일어 실력 향상"
 
         prompt = f"""
 다음 독일어 문법 주제에 대한 학습 컨텐츠를 생성해 주세요.
@@ -102,6 +113,17 @@ class LearningContentGenerator:
 - **스킬 이름**: {skill_name}
 - **설명**: {skill_description}
 - **학습자 레벨**: {user_cefr_level}
+
+## 학습자 프로필
+- **관심사**: {interests_str}
+- **학습 목표**: {goals_str}
+
+**중요**: 예문, 퀴즈 문제, 작문 과제를 생성할 때 학습자의 관심사와 목표를 최대한 반영하세요.
+예를 들어:
+- 관심사가 "여행"이면 → 여행 관련 문장 사용 (호텔, 관광지, 교통수단 등)
+- 관심사가 "음악"이면 → 음악 관련 문장 사용 (악기, 콘서트, 음악가 등)
+- 목표가 "회화"이면 → 실제 대화에서 자주 쓰이는 표현 우선
+- 목표가 "문법"이면 → 문법 규칙에 더 집중
 
 ## 생성할 컨텐츠
 

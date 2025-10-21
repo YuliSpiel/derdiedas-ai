@@ -479,6 +479,7 @@ def show_create_notebook_form():
             topic=notebook_data["topic"],
             created_at=notebook_data["created_at"],
             is_recommended=notebook_data.get("is_recommended", False),
+            skill_id=notebook_data.get("skill_id"),  # 사용자 선택 스킬 ID
         )
         st.session_state.profile_manager.add_notebook(new_notebook)
         st.session_state.show_create_notebook = False

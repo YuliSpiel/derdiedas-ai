@@ -67,13 +67,14 @@ class Notebook:
     """학습 노트북"""
 
     id: str
-    title: str  # 예: "문법 · 정관사(der/die/das)"
-    category: str  # "문법", "표현", "어휘" 등
-    topic: str  # "정관사", "출장 회화" 등
+    title: str  # 예: "Definite article – nominative"
+    category: str  # "Grammar", "Expression" 등
+    topic: str  # "Articles", "Verbs" 등
     total_sessions: int = 0
     last_studied: Optional[str] = None
     created_at: Optional[str] = None
-    is_recommended: bool = False  # 추천 노트북 여부
+    is_recommended: bool = False  # 추천 노트북 여부 (적응형 주제 선정)
+    skill_id: Optional[str] = None  # 사용자 선택 스킬 ID (고정 주제)
 
     def to_dict(self) -> Dict:
         """딕셔너리로 변환"""
@@ -86,6 +87,7 @@ class Notebook:
             "last_studied": self.last_studied,
             "created_at": self.created_at,
             "is_recommended": self.is_recommended,
+            "skill_id": self.skill_id,
         }
 
     @classmethod
@@ -100,6 +102,7 @@ class Notebook:
             last_studied=data.get("last_studied"),
             created_at=data.get("created_at"),
             is_recommended=data.get("is_recommended", False),
+            skill_id=data.get("skill_id"),
         )
 
 
