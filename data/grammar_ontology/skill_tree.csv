@@ -29,7 +29,7 @@ G.V.MODAL.PRET,Modal verbs – Präteritum,Grammar,Verbs,B1,G.V.MODAL.PRES,Tense
 G.V.COP.SEIN,Hilfsverb/Copula sein,Grammar,Verbs,A1,,Aux=Sein,ich bin/war/gewesen
 G.V.AUX.HABEN,Auxiliary haben,Grammar,Verbs,A1,,Aux=Haben,habe/hatte/gehabt
 G.V.TENSE.PRES,Präsens – regular/irregular,Grammar,Verbs,A1,,Tense=Pres;VerbForm=Fin,현재시제
-G.V.TENSE.PRET,Präteritum (simple past, high-freq),Grammar,Verbs,A2,G.V.TENSE.PRES,Tense=Past,war/hatte/ging 등
+G.V.TENSE.PRET,Präteritum (simple past; high-freq),Grammar,Verbs,A2,G.V.TENSE.PRES,Tense=Past,war/hatte/ging 등
 G.V.TENSE.PERF,Perfekt (haben/sein + Part.II),Grammar,Verbs,A2,G.V.AUX.*,Tense=Perf;Aux=*,ist gegangen/hat gespielt
 G.V.PARTICIPLE.II,Partizip II formation,Grammar,Verbs,A2,G.V.TENSE.PERF,VerbForm=Part,ge-…-t/en
 G.V.REFL.BASICS,Reflexive verbs basics,Grammar,Verbs,A2,G.PRON.REFL.BASICS,Reflex=Yes,sich freuen 등
