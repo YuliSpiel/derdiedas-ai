@@ -19,6 +19,9 @@ sys.path.insert(0, str(project_root / "src"))
 from level_test.CEFR_Eval import LevelTestSession, CEFRLevel
 from models import ProfileManager
 
+# 테스트 모드 임포트 (프로덕션 배포 시 삭제)
+from utils.test_mode import render_test_sidebar
+
 # =============================================================================
 # 페이지 설정
 # =============================================================================
@@ -113,6 +116,10 @@ def init_session_state():
 
 
 def main():
+    # 테스트 모드 사이드바 렌더링 (프로덕션 배포 시 삭제)
+    if render_test_sidebar():
+        st.rerun()
+
     init_session_state()
 
     # 헤더

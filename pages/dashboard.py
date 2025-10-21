@@ -16,6 +16,9 @@ sys.path.insert(0, str(project_root / "src"))
 
 from models import UserProfile, Notebook, ProfileManager
 
+# 테스트 모드 임포트 (프로덕션 배포 시 삭제)
+from utils.test_mode import render_test_sidebar
+
 # =============================================================================
 # 페이지 설정
 # =============================================================================
@@ -397,6 +400,10 @@ def show_create_notebook_form():
 
 
 def main():
+    # 테스트 모드 사이드바 렌더링 (프로덕션 배포 시 삭제)
+    if render_test_sidebar():
+        st.rerun()
+
     init_session_state()
 
     # 프로필 로드

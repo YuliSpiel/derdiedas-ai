@@ -21,6 +21,8 @@ derdiedas-ai.ai/
 │   │   └── __init__.py
 │   ├── dashboard/               # 대시보드 (원본 소스)
 │   └── utils/                   # 유틸리티
+│       ├── skill_tree_loader.py # 스킬 트리 → 온톨로지 변환
+│       └── test_mode.py         # 테스트 모드 (개발용, 배포 시 삭제)
 ├── notebooks/                   # Jupyter 노트북
 ├── docs/                        # 문서
 ├── config/                      # 설정 파일
@@ -93,6 +95,25 @@ streamlit run app.py
 사이드바에서 페이지 전환:
 - **dashboard** - 프로필 및 노트북 관리 (메인 홈)
 - **level_test** - CEFR 기반 독일어 레벨 테스트
+
+### 5. 테스트 모드 (개발용)
+
+테스트 모드를 활성화하면 사이드바에서 사용자를 자유롭게 전환하고 캐시를 초기화할 수 있습니다.
+
+**테스트 모드 활성화:**
+- `src/utils/test_mode.py` 파일에서 `TEST_MODE_ENABLED = True` (기본값)
+
+**테스트 모드 기능:**
+- 🔄 사용자 전환: 미리 정의된 사용자 프로필로 전환 (A1, A2, B1 학습자 등)
+- 💾 현재 상태 저장: 현재 사용자 상태를 특정 ID로 저장
+- 🗑️ 캐시 삭제: 모든 사용자 데이터 삭제 (첫 접속 상태로 초기화)
+- 🧪 커스텀 사용자: 직접 사용자 ID를 입력하여 테스트
+
+**프로덕션 배포 시:**
+1. `src/utils/test_mode.py`에서 `TEST_MODE_ENABLED = False` 설정
+2. 또는 테스트 모드 관련 코드 완전 삭제:
+   - `src/utils/test_mode.py` 파일 삭제
+   - `pages/dashboard.py`, `pages/level_test.py`에서 테스트 모드 임포트 및 호출 삭제
 
 ## 기술 스택
 
