@@ -188,22 +188,7 @@ def show_quiz_stage():
         show_quiz_results(len(questions))
         return
 
-    # 이미 풀었던 문제들 표시 (간략하게)
-    for idx in range(current_idx):
-        q = questions[idx]
-        answer_data = st.session_state.quiz_answers.get(q['id'])
-        if answer_data:
-            with st.container(border=True):
-                col1, col2 = st.columns([4, 1])
-                with col1:
-                    st.caption(f"문제 {idx + 1}")
-                with col2:
-                    if answer_data['correct']:
-                        st.success("✅")
-                    else:
-                        st.error("❌")
-
-    # 현재 문제
+    # 현재 문제만 표시
     question = questions[current_idx]
     question_key = f"q_{current_idx}"
 
