@@ -17,7 +17,14 @@
       "Bash(git commit -m \"refactor: Simplify app structure with auto-redirect\n\n- Changed app.py to simple entry point with auto-redirect\n- Dashboard is now the main home page\n- Removed page numbering (1_, 2_) for cleaner navigation\n- Updated README.md with new structure\n\nNavigation:\n- First visit: Redirects to dashboard\n- Existing users: Redirects to dashboard\n- Sidebar only shows: dashboard, level_test\n\")",
       "Bash(git commit -m \"feat: Remove sidebar navigation, add page buttons\n\n- Set sidebar to collapsed state in all pages\n- Added navigation button in dashboard to level test\n- Added back button in level test to return to dashboard\n- Cleaner UI without sidebar clutter\n\")",
       "Bash(git commit -m \"feat: Completely hide sidebar with CSS\n\n- Added CSS to hide sidebar completely: [data-testid=\"\"stSidebar\"\"] { display: none; }\n- Applied to both dashboard and level_test pages\n- Main content now uses full width\n- Cleaner, distraction-free UI\n\")",
-      "Bash(git commit -m \"docs: Add MERLIN corpus citation and data attribution\n\n- Added comprehensive citation section in README.md\n- Included BibTeX citation for MERLIN corpus\n- Added citation in CEFR_Eval.py header and load_corpus method\n- Proper attribution to Boyd et al. (2014)\n- License information (CC BY-SA 4.0)\n- Dataset source URL\n\")"
+      "Bash(git commit -m \"docs: Add MERLIN corpus citation and data attribution\n\n- Added comprehensive citation section in README.md\n- Included BibTeX citation for MERLIN corpus\n- Added citation in CEFR_Eval.py header and load_corpus method\n- Proper attribution to Boyd et al. (2014)\n- License information (CC BY-SA 4.0)\n- Dataset source URL\n\")",
+      "Bash(git add README.md)",
+      "Bash(git commit -m \"docs: Add complete data citations to README\n\n- Added MERLIN corpus citation with BibTeX format\n- Added Deutsch im Blick grammar resource citation\n- Included license information (CC BY-SA 4.0, CC BY 4.0)\n- Specified modifications made to original data\n- Proper academic attribution for both sources\n\")",
+      "Bash(python src/utils/parse_grammar_content.py)",
+      "Bash(pip install beautifulsoup4)",
+      "Bash(cat data/grammar_content/grammar_summary.json)",
+      "Bash(cat data/grammar_content/grammar_topics.json)",
+      "Bash(git commit -m \"feat: Add grammar content parser and structured data\n\n- Created parse_grammar_content.py to parse HTML grammar pages\n- Automated CEFR level tagging (A1-C1)\n- Category classification (verbs, nouns, adjectives, etc.)\n- Tag extraction and difficulty scoring\n- Parsed 69 grammar topics from Deutsch im Blick\n- Generated grammar_topics.json with full structured data\n- Generated grammar_summary.json with statistics\n- Added beautifulsoup4 to requirements.txt\n\nStatistics:\n- 27 verb topics, 25 noun topics, 14 article topics\n- 42 A1 level, 17 A2 level, 10 B1 level\n- Includes content structure, examples, and tables\n\")"
     ],
     "deny": [],
     "ask": []
