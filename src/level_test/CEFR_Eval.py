@@ -1079,8 +1079,12 @@ class LevelTestSession:
         import pandas as pd
         from pathlib import Path
 
-        # 스킬 데이터 로드
-        skill_file = Path(__file__).parent.parent / "data" / "grammar_ontology" / "skill_tree.csv"
+        # 스킬 데이터 로드 (프로젝트 루트 찾기)
+        # __file__: /src/level_test/CEFR_Eval.py
+        # parent: /src/level_test
+        # parent.parent: /src
+        # parent.parent.parent: 프로젝트 루트
+        skill_file = Path(__file__).parent.parent.parent / "data" / "grammar_ontology" / "skill_tree.csv"
         if not skill_file.exists():
             print(f"⚠️ 스킬 파일 없음: {skill_file}")
             return {}
