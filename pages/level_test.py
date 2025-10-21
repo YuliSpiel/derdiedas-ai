@@ -27,7 +27,7 @@ st.set_page_config(
     page_title="DerDieDas.ai 레벨 테스트",
     page_icon="📊",
     layout="centered",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # 커스텀 CSS
@@ -341,12 +341,15 @@ def show_result_screen():
     try:
         profile_manager = ProfileManager()
         profile_manager.update_level_from_test(result['display_level'])
-        st.success("✅ 레벨이 프로필에 저장되었습니다! 왼쪽 사이드바에서 대시보드로 이동하세요.")
+        st.success("✅ 레벨이 프로필에 저장되었습니다!")
     except Exception as e:
         st.warning(f"프로필 저장 실패: {e}")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
+        if st.button("🏠 대시보드로 돌아가기", use_container_width=True, type="primary"):
+            st.switch_page("pages/dashboard.py")
+    with col2:
         if st.button("🔄 테스트 다시 하기", use_container_width=True):
             # 세션 초기화
             st.session_state.test_session = None

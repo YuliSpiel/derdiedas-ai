@@ -24,7 +24,7 @@ st.set_page_config(
     page_title="DerDieDas.ai - 대시보드",
     page_icon="📚",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # 커스텀 CSS
@@ -417,6 +417,13 @@ def main():
 
     # 새 노트북 만들기 버튼
     show_create_notebook_button()
+
+    # 하단 네비게이션
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("📊 레벨 테스트 하러 가기", use_container_width=True, type="primary"):
+            st.switch_page("pages/level_test.py")
 
 
 # =============================================================================
