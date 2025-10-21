@@ -480,21 +480,30 @@ def show_completion_stage():
                     # 저장
                     profile_manager.save_profile(profile)
 
-                    # 노트북 세션 업데이트 (세션 수와 마지막 학습 날짜)
-                    session = st.session_state.learning_session
-                    if session and session.notebook_id:
-                        notebooks = profile_manager.load_notebooks()
-                        for nb in notebooks:
-                            if nb.id == session.notebook_id:
-                                nb.total_sessions += 1
-                                from datetime import datetime
-                                nb.last_studied = datetime.now().strftime("%m/%d")
-                                break
-                        profile_manager.save_notebooks(notebooks)
-
-                    st.session_state.proficiency_updated = True
-
                     st.info(f"📈 스킬 숙련도: {current_proficiency:.1f} → {new_proficiency:.1f} ({proficiency_change:+.1f})")
+
+                # 노트북 세션 업데이트 (항상 실행)
+                session = st.session_state.learning_session
+                if session and session.notebook_id:
+                    notebooks = profile_manager.load_notebooks()
+                    updated = False
+                    for nb in notebooks:
+                        if nb.id == session.notebook_id:
+                            nb.total_sessions += 1
+                            from datetime import datetime
+                            nb.last_studied = datetime.now().strftime("%m/%d")
+                            updated = True
+                            print(f"✅ 노트북 업데이트: {nb.title} - 세션 {nb.total_sessions}, 날짜 {nb.last_studied}")
+                            break
+                    if updated:
+                        profile_manager.save_notebooks(notebooks)
+                    else:
+                        print(f"⚠️ 노트북 ID를 찾을 수 없음: {session.notebook_id}")
+                        print(f"📋 현재 노트북 목록: {[nb.id for nb in notebooks]}")
+                else:
+                    print(f"⚠️ 세션 정보 없음: session={session}, notebook_id={session.notebook_id if session else 'N/A'}")
+
+                st.session_state.proficiency_updated = True
 
             except Exception as e:
                 st.error(f"프로필 업데이트 오류: {e}")
