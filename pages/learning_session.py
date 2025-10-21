@@ -1,0 +1,436 @@
+"""
+학습 세션 페이지
+
+단계별 학습 플로우:
+1. 개념 설명 (독일어/한국어 토글)
+2. 퀴즈 (5문제 순차적)
+3. 적응형 재시도 (필요시)
+4. 작문 과제
+5. 완료 화면
+"""
+
+import streamlit as st
+import sys
+from pathlib import Path
+from datetime import datetime
+import uuid
+
+# 프로젝트 루트 추가
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root / "src"))
+
+from models import ProfileManager
+from models.learning_cycle import LearningSession, LearningStage
+from learning.topic_selector import TopicSelector
+from learning.content_generator import LearningContentGenerator
+
+# =============================================================================
+# 페이지 설정
+# =============================================================================
+
+st.set_page_config(
+    page_title="학습 중",
+    page_icon="📖",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# CSS
+st.markdown("""
+<style>
+    [data-testid="stSidebar"] {
+        display: none;
+    }
+
+    .concept-box {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        border-left: 5px solid #667eea;
+        margin: 1rem 0;
+    }
+
+    .example-box {
+        background-color: #ffffff;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        margin: 0.5rem 0;
+    }
+
+    .quiz-question {
+        background-color: #f0f2f6;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 4px;
+        margin: 1rem 0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+# =============================================================================
+# 세션 상태 초기화
+# =============================================================================
+
+def init_session_state():
+    """세션 상태 초기화"""
+    if "learning_session" not in st.session_state:
+        st.session_state.learning_session = None
+    if "learning_content" not in st.session_state:
+        st.session_state.learning_content = None
+    if "current_quiz_index" not in st.session_state:
+        st.session_state.current_quiz_index = 0
+    if "quiz_answers" not in st.session_state:
+        st.session_state.quiz_answers = {}
+    if "show_korean" not in st.session_state:
+        st.session_state.show_korean = False
+
+
+# =============================================================================
+# 1. 개념 설명 단계
+# =============================================================================
+
+def show_concept_stage():
+    """개념 설명 화면"""
+    content = st.session_state.learning_content
+
+    st.markdown("## 📖 개념 설명")
+
+    # 진행률
+    st.progress(0.25)
+    st.caption("1단계 / 4단계: 개념 학습")
+
+    st.markdown("---")
+
+    # 독일어/한국어 토글
+    col1, col2, col3 = st.columns([1, 1, 3])
+    with col1:
+        if st.button("🇩🇪 독일어", use_container_width=True,
+                    type="primary" if not st.session_state.show_korean else "secondary"):
+            st.session_state.show_korean = False
+            st.rerun()
+    with col2:
+        if st.button("🇰🇷 한국어", use_container_width=True,
+                    type="primary" if st.session_state.show_korean else "secondary"):
+            st.session_state.show_korean = True
+            st.rerun()
+
+    # 개념 설명 표시
+    with st.container(border=True):
+        if st.session_state.show_korean:
+            st.markdown(content["concept_ko"])
+        else:
+            st.markdown(content["concept_de"])
+
+    # 예문
+    st.markdown("### 📚 예문")
+    for idx, example in enumerate(content["examples"], 1):
+        with st.container(border=True):
+            st.markdown(f"**{idx}.** {example['de']}")
+            st.caption(example['ko'])
+
+    # 다음 단계 버튼
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("▶️ 문제 풀기", use_container_width=True, type="primary"):
+            st.session_state.learning_session.current_stage = LearningStage.QUIZ
+            st.session_state.current_quiz_index = 0
+            st.session_state.quiz_answers = {}
+            st.rerun()
+
+
+# =============================================================================
+# 2. 퀴즈 단계
+# =============================================================================
+
+def show_quiz_stage():
+    """퀴즈 화면"""
+    content = st.session_state.learning_content
+    questions = content["quiz_questions"][:5]  # 처음 5개만
+
+    current_idx = st.session_state.current_quiz_index
+
+    # 진행률
+    progress = 0.25 + (0.25 * (current_idx / 5))
+    st.progress(progress)
+    st.caption(f"2단계 / 4단계: 문제 풀기 ({current_idx + 1}/5)")
+
+    st.markdown("---")
+
+    # 현재 문제
+    if current_idx < len(questions):
+        question = questions[current_idx]
+
+        st.markdown(f"### 문제 {current_idx + 1}")
+
+        with st.container(border=True):
+            st.markdown(f"**{question['question']}**")
+
+            # 답변 입력
+            if question['type'] == 'fill_blank':
+                user_answer = st.text_input(
+                    "답변",
+                    key=f"answer_{current_idx}",
+                    label_visibility="collapsed"
+                )
+            else:  # multiple_choice
+                user_answer = st.radio(
+                    "답변 선택",
+                    options=question['options'],
+                    key=f"answer_{current_idx}",
+                    label_visibility="collapsed"
+                )
+
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("✅ 확인", key=f"check_{current_idx}", use_container_width=True, type="primary"):
+                    if not user_answer:
+                        st.error("답변을 입력해주세요!")
+                    else:
+                        # 정답 확인
+                        is_correct = user_answer.strip().lower() == question['correct_answer'].lower()
+
+                        st.session_state.quiz_answers[question['id']] = {
+                            'user_answer': user_answer,
+                            'correct': is_correct,
+                            'question': question
+                        }
+
+                        if is_correct:
+                            st.success("✅ 정답입니다!")
+                            st.info(f"💡 {question['explanation']}")
+
+                            # 다음 문제로
+                            if st.button("➡️ 다음 문제", key=f"next_{current_idx}"):
+                                st.session_state.current_quiz_index += 1
+                                st.rerun()
+                        else:
+                            st.error("❌ 틀렸습니다. 다시 시도해보세요!")
+                            st.info(f"💡 힌트: {question['explanation']}")
+
+    else:
+        # 5문제 완료 - 정답률 계산
+        show_quiz_results(5)
+
+
+def show_quiz_results(total_questions: int):
+    """퀴즈 결과 화인 및 적응형 로직"""
+    answers = st.session_state.quiz_answers
+    correct_count = sum(1 for a in answers.values() if a['correct'])
+    accuracy = (correct_count / total_questions) * 100 if total_questions > 0 else 0
+
+    st.markdown("## 📊 문제 풀이 결과")
+
+    with st.container(border=True):
+        st.metric("정답률", f"{accuracy:.0f}%", f"{correct_count}/{total_questions}")
+
+    st.markdown("---")
+
+    # 적응형 로직
+    if accuracy < 40:
+        st.warning("⚠️ 정답률이 40% 미만입니다.")
+
+        if total_questions == 5:
+            # 첫 5문제 - 2문제 더 풀기
+            st.info("💪 조금 더 연습이 필요해요! 2문제를 더 풀어봅시다.")
+
+            if st.button("➕ 추가 문제 풀기 (2문제)", use_container_width=True, type="primary"):
+                # 6-7번 문제 추가
+                st.session_state.current_quiz_index = 5
+                st.rerun()
+        else:
+            # 7문제까지 풀었는데도 40% 미만
+            st.error("😢 아직 개념이 확실하지 않은 것 같아요.")
+            st.info("개념 설명으로 돌아가서 다시 학습해봅시다!")
+
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔄 개념 학습으로 돌아가기", use_container_width=True, type="primary"):
+                    # 퀴즈 리셋
+                    st.session_state.learning_session.current_stage = LearningStage.CONCEPT
+                    st.session_state.current_quiz_index = 0
+                    st.session_state.quiz_answers = {}
+                    st.rerun()
+            with col2:
+                if st.button("🏠 대시보드로", use_container_width=True):
+                    st.switch_page("pages/dashboard.py")
+    else:
+        # 40% 이상 - 다음 단계로
+        st.success("🎉 잘하셨습니다!")
+
+        if st.button("▶️ 작문 과제로 이동", use_container_width=True, type="primary"):
+            st.session_state.learning_session.current_stage = LearningStage.WRITING
+            st.rerun()
+
+
+# =============================================================================
+# 3. 작문 과제 단계
+# =============================================================================
+
+def show_writing_stage():
+    """작문 과제 화면"""
+    content = st.session_state.learning_content
+    task = content["writing_task"]
+
+    st.progress(0.75)
+    st.caption("3단계 / 4단계: 작문 과제")
+
+    st.markdown("## ✍️ 작문 과제")
+    st.markdown("---")
+
+    with st.container(border=True):
+        st.markdown(f"**{task['prompt_ko']}**")
+        st.caption(f"🇩🇪 {task['prompt_de']}")
+        st.caption(f"최소 {task['min_sentences']}문장 이상 작성해주세요.")
+
+    # 작문 입력
+    user_writing = st.text_area(
+        "작문",
+        height=200,
+        placeholder="여기에 독일어로 작성하세요...",
+        label_visibility="collapsed"
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("✅ 제출하고 피드백 받기", use_container_width=True, type="primary"):
+            if not user_writing.strip():
+                st.error("작문을 입력해주세요!")
+            else:
+                st.session_state.user_writing = user_writing
+                st.session_state.learning_session.current_stage = LearningStage.COMPLETED
+                st.rerun()
+
+
+# =============================================================================
+# 4. 완료 화면
+# =============================================================================
+
+def show_completion_stage():
+    """학습 완료 화면"""
+    st.progress(1.0)
+    st.caption("완료! 🎉")
+
+    st.markdown("## 🎉 학습 완료!")
+
+    with st.container(border=True):
+        st.success("이번 학습 사이클을 성공적으로 완료했습니다!")
+
+        # 스탬프 추가
+        st.markdown("### 🏆 보상")
+        st.info("✨ 스탬프 +1 획득!")
+
+        # TODO: 실제 스탬프 추가 로직
+        # TODO: 스킬 숙련도 업데이트
+        # TODO: 학습 횟수 업데이트
+
+    st.markdown("---")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🏠 대시보드로", use_container_width=True, type="primary"):
+            st.switch_page("pages/dashboard.py")
+    with col2:
+        if st.button("🔄 다시 학습하기", use_container_width=True):
+            # 세션 리셋
+            st.session_state.learning_session = None
+            st.session_state.learning_content = None
+            st.rerun()
+
+
+# =============================================================================
+# 메인
+# =============================================================================
+
+def main():
+    init_session_state()
+
+    # 학습 세션이 없으면 생성
+    if st.session_state.learning_session is None:
+        st.markdown("## 🚀 학습 준비 중...")
+
+        with st.spinner("주제를 선정하고 학습 자료를 생성하는 중..."):
+            # TODO: 실제 노트북 ID 받아오기
+            # 지금은 테스트용
+            session = create_learning_session("test-notebook-id")
+
+            if session:
+                st.session_state.learning_session = session
+                st.rerun()
+            else:
+                st.error("학습 세션을 생성할 수 없습니다.")
+                if st.button("대시보드로 돌아가기"):
+                    st.switch_page("pages/dashboard.py")
+                return
+
+    # 현재 단계에 따라 화면 표시
+    session = st.session_state.learning_session
+
+    if session.current_stage == LearningStage.CONCEPT:
+        show_concept_stage()
+    elif session.current_stage == LearningStage.QUIZ:
+        show_quiz_stage()
+    elif session.current_stage == LearningStage.WRITING:
+        show_writing_stage()
+    elif session.current_stage == LearningStage.COMPLETED:
+        show_completion_stage()
+
+
+def create_learning_session(notebook_id: str) -> LearningSession:
+    """학습 세션 생성"""
+    try:
+        # 1. 프로필 로드
+        profile_manager = ProfileManager()
+        profile = profile_manager.load_profile()
+
+        # 2. 주제 선정
+        selector = TopicSelector()
+        selected_skill = selector.select_topic(
+            user_proficiency=profile.skill_proficiency,
+            learning_count=profile.skill_learning_count,
+            domain_filter="Grammar"
+        )
+
+        if not selected_skill:
+            st.error("선택 가능한 주제가 없습니다.")
+            return None
+
+        skill_info = selector.get_skill_info(selected_skill)
+
+        st.success(f"📚 주제: {skill_info['name']}")
+
+        # 3. 컨텐츠 생성
+        generator = LearningContentGenerator()
+        content = generator.generate_content(
+            skill_id=selected_skill,
+            skill_name=skill_info['name'],
+            skill_description=skill_info.get('name', ''),
+            user_cefr_level=profile.level.split('-')[0] if '-' in profile.level else profile.level
+        )
+
+        st.session_state.learning_content = content
+
+        # 4. 세션 생성
+        session = LearningSession(
+            session_id=str(uuid.uuid4()),
+            notebook_id=notebook_id,
+            topic=skill_info['name']
+        )
+
+        return session
+
+    except Exception as e:
+        st.error(f"세션 생성 오류: {e}")
+        return None
+
+
+if __name__ == "__main__":
+    main()

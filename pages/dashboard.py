@@ -431,8 +431,9 @@ def show_notebook_list(notebooks: list):
                         if st.button(
                             "📖 열기", key=f"open_{notebook.id}", use_container_width=True, type="primary"
                         ):
-                            st.info("학습 사이클은 곧 제공될 예정입니다!")
-                            # TODO: 학습 사이클 페이지로 이동
+                            # 학습 세션 페이지로 이동
+                            st.session_state.selected_notebook_id = notebook.id
+                            st.switch_page("pages/learning_session.py")
                     with col_btn2:
                         if st.button(
                             "🗑️ 삭제", key=f"delete_{notebook.id}", use_container_width=True
