@@ -42,26 +42,32 @@ def load_ontology():
                     'domain': row['domain'],
                 }
 
-    # 2. JSON에서 컨텐츠 로드
+    # 2. JSON에서 컨텐츠 로드 (선택사항)
     if not ontology_path.exists():
         return metadata  # CSV 메타데이터만이라도 반환
 
-    with open(ontology_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    try:
+        with open(ontology_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
 
-    # 리스트 형식 처리
-    topics = data if isinstance(data, list) else data.get("topics", [])
+        # 리스트 형식 처리
+        topics = data if isinstance(data, list) else data.get("topics", [])
 
-    # 3. 메타데이터와 컨텐츠 합치기
-    skills = {}
-    for topic in topics:
-        skill_id = topic.get("skill_id") or topic.get("id")
-        if skill_id in metadata:
-            # 메타데이터 + JSON 컨텐츠 합침
-            skills[skill_id] = {**metadata[skill_id], **topic}
-        else:
-            # JSON만 있는 경우
-            skills[skill_id] = topic
+        # 3. 메타데이터와 컨텐츠 합치기
+        skills = {}
+        for topic in topics:
+            skill_id = topic.get("skill_id") or topic.get("id")
+            if skill_id in metadata:
+                # 메타데이터 + JSON 컨텐츠 합침
+                skills[skill_id] = {**metadata[skill_id], **topic}
+            else:
+                # JSON만 있는 경우
+                skills[skill_id] = topic
+    except Exception as e:
+        # JSON 파싱 실패 시 CSV 메타데이터만 사용
+        print(f"⚠️ grammar_ontology.json 로딩 실패: {e}")
+        print(f"   CSV 메타데이터만 사용합니다.")
+        return metadata
 
     # 4. JSON에 없지만 CSV에만 있는 스킬 추가 (메타데이터만)
     for skill_id, meta in metadata.items():
