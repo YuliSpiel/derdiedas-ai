@@ -149,6 +149,7 @@ def show_concept_stage():
             st.session_state.learning_session.current_stage = LearningStage.QUIZ
             st.session_state.current_quiz_index = 0
             st.session_state.quiz_answers = {}
+            st.session_state.quiz_retry_count = {}
             st.rerun()
 
 
@@ -163,6 +164,8 @@ def show_quiz_stage():
     # 세션 상태 초기화
     if "quiz_checked" not in st.session_state:
         st.session_state.quiz_checked = {}
+    if "quiz_retry_count" not in st.session_state:
+        st.session_state.quiz_retry_count = {}  # 문제별 재시도 횟수
 
     # 필요한 문제 수 결정
     total_needed = 5
@@ -246,16 +249,33 @@ def show_quiz_stage():
                     st.session_state.quiz_checked[question_key] = False
                     st.rerun()
             else:
-                # 오답인 경우 - 힌트 표시하고 다시 입력 가능하게
-                st.error("❌ 틀렸습니다. 다시 시도해보세요!")
-                st.warning(f"💡 힌트: {question['explanation']}")
+                # 오답인 경우
+                retry_count = st.session_state.quiz_retry_count.get(question_key, 0)
 
-                # 다시 풀기 버튼
-                if st.button("🔄 다시 입력하기", use_container_width=True):
-                    st.session_state.quiz_checked[question_key] = False
-                    if question['id'] in st.session_state.quiz_answers:
-                        del st.session_state.quiz_answers[question['id']]
-                    st.rerun()
+                if retry_count == 0:
+                    # 첫 번째 오답 - 재시도 기회 제공
+                    st.error("❌ 틀렸습니다. 다시 시도해보세요!")
+                    st.warning(f"💡 힌트: {question['explanation']}")
+
+                    # 다시 풀기 버튼
+                    if st.button("🔄 다시 입력하기", use_container_width=True):
+                        st.session_state.quiz_checked[question_key] = False
+                        st.session_state.quiz_retry_count[question_key] = 1
+                        if question['id'] in st.session_state.quiz_answers:
+                            del st.session_state.quiz_answers[question['id']]
+                        st.rerun()
+                else:
+                    # 두 번째 오답 - 정답 공개하고 넘어가기
+                    st.error("❌ 틀렸습니다.")
+                    st.info(f"**정답:** {question['correct_answer']}")
+                    st.warning(f"💡 설명: {question['explanation']}")
+
+                    # 오답으로 기록 (correct=False 유지)
+                    if st.button("➡️ 다음 문제", use_container_width=True, type="primary"):
+                        st.session_state.current_quiz_index += 1
+                        st.session_state.quiz_checked[question_key] = False
+                        st.session_state.quiz_retry_count[question_key] = 0  # 리셋
+                        st.rerun()
         else:
             # 아직 확인 안한 상태 - 확인 버튼
             if st.button("✅ 확인", use_container_width=True, type="primary", disabled=not user_answer):
@@ -311,6 +331,7 @@ def show_quiz_results(total_questions: int):
                     st.session_state.learning_session.current_stage = LearningStage.CONCEPT
                     st.session_state.current_quiz_index = 0
                     st.session_state.quiz_answers = {}
+                    st.session_state.quiz_retry_count = {}
                     st.rerun()
             with col2:
                 if st.button("🏠 대시보드로", use_container_width=True):
