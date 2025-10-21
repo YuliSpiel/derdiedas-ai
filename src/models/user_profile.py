@@ -190,39 +190,138 @@ class ProfileManager:
         profile.total_stamps += 1
         self.save_profile(profile)
 
-    def _create_default_notebooks(self) -> List[Notebook]:
-        """기본 노트북 생성 (추천용)"""
-        # 스킬 데이터 기반 추천 노트북 생성
+    def refresh_recommended_notebooks(self):
+        """추천 노트북 갱신 (숙련도 업데이트 후 호출)"""
+        # 기존 추천 노트북 제거
+        notebooks = self.load_notebooks()
+        user_notebooks = [nb for nb in notebooks if not nb.is_recommended]
+
+        # 새로운 추천 노트북 생성
+        new_recommended = self.generate_recommended_notebooks(count=2)
+
+        # 합쳐서 저장
+        all_notebooks = user_notebooks + new_recommended
+        self.save_notebooks(all_notebooks)
+
+        print(f"✨ 추천 노트북 갱신 완료: {[nb.title for nb in new_recommended]}")
+
+    def generate_recommended_notebooks(self, count: int = 2) -> List[Notebook]:
+        """
+        사용자 숙련도 기반 추천 노트북 생성
+
+        Args:
+            count: 생성할 추천 노트북 개수 (기본 2개)
+        """
         try:
             from pathlib import Path
             import csv
+            import random
 
+            # 프로필 로드
+            profile = self.load_profile()
+
+            # 스킬 데이터 로드
             skill_tree_path = Path("data/grammar_ontology/skill_tree.csv")
-            if skill_tree_path.exists():
-                with open(skill_tree_path, "r", encoding="utf-8") as f:
-                    reader = csv.DictReader(f)
-                    skills = list(reader)
-
-                # A1 레벨 스킬 중 일부를 추천 노트북으로 생성
-                recommended_skills = [s for s in skills if s['cefr'] == 'A1'][:3]
-
-                notebooks = []
-                for skill in recommended_skills:
-                    notebooks.append(Notebook(
-                        id=f"nb_{skill['skill_id']}",
-                        title=skill['name'],  # 스킬 이름을 타이틀로 직접 사용
-                        category="Grammar",
-                        topic=skill['area'],
-                        is_recommended=True,
-                        created_at=datetime.now().isoformat(),
-                    ))
-
-                return notebooks if notebooks else self._fallback_notebooks()
-            else:
+            if not skill_tree_path.exists():
                 return self._fallback_notebooks()
+
+            with open(skill_tree_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                skills = list(reader)
+
+            # 숙련도별 가중치 (설정 가능)
+            PROFICIENCY_WEIGHTS = {
+                "0-40": 0.40,
+                "40-60": 0.30,
+                "60-80": 0.20,
+                "80-100": 0.10,
+            }
+
+            # 스킬을 숙련도 범위별로 그룹화
+            proficiency_groups = {
+                "0-40": [],
+                "40-60": [],
+                "60-80": [],
+                "80-100": [],
+            }
+
+            for skill in skills:
+                skill_id = skill['skill_id']
+                proficiency = profile.skill_proficiency.get(skill_id, 0)
+                learning_count = profile.skill_learning_count.get(skill_id, 0)
+
+                # 숙련도 범위 결정
+                if proficiency < 40:
+                    group = "0-40"
+                elif proficiency < 60:
+                    group = "40-60"
+                elif proficiency < 80:
+                    group = "60-80"
+                else:
+                    group = "80-100"
+
+                proficiency_groups[group].append({
+                    'skill': skill,
+                    'proficiency': proficiency,
+                    'learning_count': learning_count
+                })
+
+            # 추천 스킬 선택
+            recommended_skills = []
+            for _ in range(count):
+                # 1단계: 가중치에 따라 숙련도 범위 선택
+                ranges = list(PROFICIENCY_WEIGHTS.keys())
+                weights = [PROFICIENCY_WEIGHTS[r] for r in ranges]
+
+                # 비어있는 그룹 제외
+                valid_ranges = [r for r in ranges if proficiency_groups[r]]
+                if not valid_ranges:
+                    break
+
+                valid_weights = [PROFICIENCY_WEIGHTS[r] for r in valid_ranges]
+                selected_range = random.choices(valid_ranges, weights=valid_weights, k=1)[0]
+
+                # 2단계: 선택된 범위 내에서 학습 횟수가 가장 적은 스킬 선택
+                candidates = proficiency_groups[selected_range]
+
+                # 이미 선택된 스킬 제외
+                selected_ids = {s['skill']['skill_id'] for s in recommended_skills}
+                candidates = [c for c in candidates if c['skill']['skill_id'] not in selected_ids]
+
+                if not candidates:
+                    continue
+
+                # 학습 횟수 기준으로 정렬 (적은 순)
+                candidates.sort(key=lambda x: x['learning_count'])
+
+                # 가장 적게 학습한 스킬 선택
+                recommended_skills.append(candidates[0])
+
+            # 노트북 생성
+            notebooks = []
+            for item in recommended_skills:
+                skill = item['skill']
+                notebooks.append(Notebook(
+                    id=f"nb_rec_{skill['skill_id']}",
+                    title=skill['name'],
+                    category="Grammar",
+                    topic=skill['area'],
+                    is_recommended=True,
+                    created_at=datetime.now().isoformat(),
+                ))
+
+            return notebooks if notebooks else self._fallback_notebooks()
+
         except Exception as e:
-            print(f"스킬 데이터 로드 실패: {e}")
+            print(f"추천 노트북 생성 실패: {e}")
+            import traceback
+            traceback.print_exc()
             return self._fallback_notebooks()
+
+    def _create_default_notebooks(self) -> List[Notebook]:
+        """기본 노트북 생성 (최초 실행 시에만)"""
+        # 최초에는 추천 로직 사용
+        return self.generate_recommended_notebooks(count=2)
 
     def _fallback_notebooks(self) -> List[Notebook]:
         """기본 노트북 (폴백)"""

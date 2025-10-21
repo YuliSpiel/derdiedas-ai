@@ -480,7 +480,11 @@ def show_completion_stage():
                     # 저장
                     profile_manager.save_profile(profile)
 
+                    # 숙련도가 업데이트되었으므로 추천 노트북 갱신
+                    profile_manager.refresh_recommended_notebooks()
+
                     st.info(f"📈 스킬 숙련도: {current_proficiency:.1f} → {new_proficiency:.1f} ({proficiency_change:+.1f})")
+                    st.success("✨ 추천 노트북이 갱신되었습니다")
 
                 # 노트북 세션 업데이트 (항상 실행)
                 session = st.session_state.learning_session
