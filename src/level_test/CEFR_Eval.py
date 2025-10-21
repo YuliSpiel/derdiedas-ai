@@ -300,8 +300,17 @@ class CEFRCorpusLoader:
 
         # 프로젝트 루트에 캐시 디렉토리 설정
         project_root = Path(__file__).parent.parent.parent
-        cache_dir = project_root / "models_cache" / "datasets"
-        cache_dir.mkdir(parents=True, exist_ok=True)
+
+        # notebooks/models_cache 경로 우선 사용 (기존 캐시가 있을 수 있음)
+        notebooks_cache = project_root / "notebooks" / "models_cache" / "datasets"
+        root_cache = project_root / "models_cache" / "datasets"
+
+        # notebooks에 캐시가 있으면 그것 사용, 없으면 root 사용
+        if notebooks_cache.exists():
+            cache_dir = notebooks_cache
+        else:
+            cache_dir = root_cache
+            cache_dir.mkdir(parents=True, exist_ok=True)
 
         print("📚 CEFR 라벨링된 독일어 코퍼스 로딩 중...")
         print("📄 MERLIN Corpus (CC BY-SA 4.0) - Boyd et al. (2014)")
