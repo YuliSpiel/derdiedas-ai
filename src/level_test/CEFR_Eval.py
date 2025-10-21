@@ -436,25 +436,53 @@ class CEFRCorpusLoader:
         return self.model
 
     def create_corpus_embeddings(self):
-        """코퍼스의 모든 문장에 대한 임베딩 생성"""
+        """코퍼스의 모든 문장에 대한 임베딩 생성 (캐싱 지원)"""
+        import pickle
+        from pathlib import Path
+
+        # 캐시 파일 경로
+        cache_dir = Path(__file__).parent.parent.parent / "models_cache"
+        cache_dir.mkdir(exist_ok=True)
+        cache_file = cache_dir / "corpus_embeddings.pkl"
+
+        # 캐시된 임베딩이 있으면 로드
+        if cache_file.exists():
+            print("\n💾 캐시된 임베딩 로딩 중...")
+            try:
+                with open(cache_file, 'rb') as f:
+                    self.embeddings = pickle.load(f)
+                print(f"✅ 캐시된 임베딩 로딩 완료 ({len(self.embeddings)}개 레벨)")
+                return self.embeddings
+            except Exception as e:
+                print(f"⚠️ 캐시 로딩 실패: {e}, 새로 생성합니다...")
+
+        # 캐시가 없으면 새로 생성
         if self.corpus_data is None:
             self.load_corpus()
         if self.model is None:
             self.load_embedder()
 
-        print("\n🔄 코퍼스 임베딩 생성 중...")
+        print("\n🔄 코퍼스 임베딩 생성 중 (최초 1회만, 이후 캐시 사용)...")
         self.embeddings = {}
 
         for level, texts in self.corpus_data.items():
             if texts:
-                # 각 레벨별 샘플링 (너무 많으면 시간 소요)
-                sample_size = min(500, len(texts))
+                # 각 레벨별 샘플링 (성능 최적화: 500개 → 300개)
+                sample_size = min(300, len(texts))
                 sampled_texts = np.random.choice(texts, sample_size, replace=False)
 
                 print(f"  {level}: {len(sampled_texts)}개 문장 임베딩 중...")
                 self.embeddings[level] = self.model.encode(
                     sampled_texts, show_progress_bar=True
                 )
+
+        # 캐시 저장
+        try:
+            with open(cache_file, 'wb') as f:
+                pickle.dump(self.embeddings, f)
+            print(f"💾 임베딩 캐시 저장 완료: {cache_file}")
+        except Exception as e:
+            print(f"⚠️ 캐시 저장 실패: {e}")
 
         print("✅ 코퍼스 임베딩 생성 완료")
         return self.embeddings
