@@ -255,7 +255,9 @@ def show_quiz_stage():
                 if retry_count == 0:
                     # 첫 번째 오답 - 재시도 기회 제공
                     st.error("❌ 틀렸습니다. 다시 시도해보세요!")
-                    st.warning(f"💡 힌트: {question['explanation']}")
+                    # 힌트 표시 (정답 없는 힌트)
+                    hint = question.get('hint', question.get('explanation', '문제를 다시 읽어보세요'))
+                    st.warning(f"💡 힌트: {hint}")
 
                     # 다시 풀기 버튼
                     if st.button("🔄 다시 입력하기", use_container_width=True):

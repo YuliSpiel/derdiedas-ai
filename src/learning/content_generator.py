@@ -155,9 +155,16 @@ class LearningContentGenerator:
   - `question`: 문제 텍스트 (독일어)
   - `options`: 선택지 배열 (multiple_choice인 경우, 3-4개)
   - `correct_answer`: 정답
-  - `explanation`: 정답 해설 (한국어, 왜 이게 정답인지)
+  - `hint`: 힌트 (한국어, **정답을 직접 언급하지 않고** 문제 해결 방향만 제시)
+  - `explanation`: 정답 해설 (한국어, 정답 공개 후에 보여줄 자세한 설명)
 - 난이도: 쉬운 것부터 어려운 순서
 - 다양한 문맥 사용
+
+**중요**:
+- `hint`는 정답을 직접 말하지 않고 문제를 푸는 방법만 알려주세요
+  - 예: "명사의 성을 먼저 확인하세요" (O)
+  - 예: "답은 'die'입니다" (X)
+- `explanation`은 정답 공개 후 자세한 설명이므로 정답 포함 가능
 
 ### 4. 작문 과제 (writing_task)
 - `prompt_de`: 독일어 지시문
@@ -180,8 +187,9 @@ class LearningContentGenerator:
     {{
       "id": "q1",
       "type": "fill_blank",
-      "question": "__ Katze schläft auf dem Sofa. (die/der/das)",
+      "question": "__ Katze schläft auf dem Sofa.",
       "correct_answer": "Die",
+      "hint": "명사 'Katze'의 성을 먼저 확인하세요. 주격 형태입니다.",
       "explanation": "'Katze'는 여성 명사이고 주격이므로 'die'를 사용합니다."
     }},
     {{
@@ -190,7 +198,8 @@ class LearningContentGenerator:
       "question": "Ich sehe __ Auto.",
       "options": ["der", "die", "das"],
       "correct_answer": "das",
-      "explanation": "'Auto'는 중성 명사이고 대격이므로 'das'를 사용합니다."
+      "hint": "'Auto'의 성과 문장에서의 격을 생각해보세요.",
+      "explanation": "'Auto'는 중성 명사이고 대격(목적어)이므로 'das'를 사용합니다."
     }},
     ...
   ],
