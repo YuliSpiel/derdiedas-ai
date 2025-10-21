@@ -1,0 +1,1843 @@
+{
+  "version": "1.0",
+  "created_at": "",
+  "metadata": {
+    "total_topics": 66,
+    "by_category": {
+      "articles": 9,
+      "nouns": 2,
+      "cases": 3,
+      "pronouns": 3,
+      "adjectives": 7,
+      "verbs": 15,
+      "other": 1,
+      "negation": 3,
+      "word_order": 6,
+      "clauses": 8,
+      "questions": 2,
+      "imperatives": 1,
+      "prepositions": 3,
+      "time": 2,
+      "particles": 1
+    },
+    "by_cefr_level": {
+      "A1": 28,
+      "A2": 20,
+      "B1": 14,
+      "Verbs": 1,
+      "B2": 3
+    }
+  },
+  "topics": [
+    {
+      "id": "G.ART.DEF.NOM",
+      "title_de": "Definite article",
+      "title_ko": "Der/Die/Das + 주어",
+      "title_en": "Definite article – nominative",
+      "cefr_level": "A1",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Definite article",
+        "nominative",
+        "Der/Die/Das + 주어"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Definite article – nominative - Der/Die/Das + 주어",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Art;Definite=Def;Case=Nom"
+    },
+    {
+      "id": "G.ART.DEF.ACC",
+      "title_de": "Definite article",
+      "title_ko": "den/die/das 목적격",
+      "title_en": "Definite article – accusative",
+      "cefr_level": "A1",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Definite article",
+        "accusative",
+        "den/die/das 목적격"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.DEF.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Definite article – accusative - den/die/das 목적격",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Art;Definite=Def;Case=Acc"
+    },
+    {
+      "id": "G.ART.DEF.DAT",
+      "title_de": "Definite article",
+      "title_ko": "dem/der/den+Dat",
+      "title_en": "Definite article – dative",
+      "cefr_level": "A2",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Definite article",
+        "dative",
+        "dem/der/den+Dat"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.DEF.ACC"
+      ],
+      "related_topics": [],
+      "summary": "Definite article – dative - dem/der/den+Dat",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Art;Definite=Def;Case=Dat"
+    },
+    {
+      "id": "G.ART.INDEF.NOM",
+      "title_de": "Indefinite article",
+      "title_ko": "ein/eine 주격",
+      "title_en": "Indefinite article – nominative",
+      "cefr_level": "A1",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Indefinite article",
+        "nominative",
+        "ein/eine 주격"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Indefinite article – nominative - ein/eine 주격",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Art;Definite=Ind;Case=Nom"
+    },
+    {
+      "id": "G.ART.INDEF.ACC",
+      "title_de": "Indefinite article",
+      "title_ko": "keinen 등 포함",
+      "title_en": "Indefinite article – accusative",
+      "cefr_level": "A1",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Indefinite article",
+        "accusative",
+        "keinen 등 포함"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.INDEF.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Indefinite article – accusative - keinen 등 포함",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Art;Definite=Ind;Case=Acc"
+    },
+    {
+      "id": "G.ART.INDEF.DAT",
+      "title_de": "Indefinite article",
+      "title_ko": " einem/einer",
+      "title_en": "Indefinite article – dative",
+      "cefr_level": "A2",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Indefinite article",
+        "dative",
+        " einem/einer"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.INDEF.ACC"
+      ],
+      "related_topics": [],
+      "summary": "Indefinite article – dative -  einem/einer",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Art;Definite=Ind;Case=Dat"
+    },
+    {
+      "id": "G.ART.NEG.NOM",
+      "title_de": "Negation with kein",
+      "title_ko": "kein/keine 주격",
+      "title_en": "Negation with kein – nominative",
+      "cefr_level": "A1",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Negation with kein",
+        "nominative",
+        "kein/keine 주격"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.INDEF.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Negation with kein – nominative - kein/keine 주격",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Polarity=Neg;PronType=Art;Case=Nom"
+    },
+    {
+      "id": "G.ART.NEG.ACC",
+      "title_de": "Negation with kein",
+      "title_ko": "keinen/keine 목적격",
+      "title_en": "Negation with kein – accusative",
+      "cefr_level": "A1",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Negation with kein",
+        "accusative",
+        "keinen/keine 목적격"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.NEG.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Negation with kein – accusative - keinen/keine 목적격",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Polarity=Neg;PronType=Art;Case=Acc"
+    },
+    {
+      "id": "G.ART.NEG.DAT",
+      "title_de": "Negation with kein",
+      "title_ko": "keinem/keiner",
+      "title_en": "Negation with kein – dative",
+      "cefr_level": "A2",
+      "category": "articles",
+      "subcategory": "Articles",
+      "tags": [
+        "Negation with kein",
+        "dative",
+        "keinem/keiner"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.NEG.ACC"
+      ],
+      "related_topics": [],
+      "summary": "Negation with kein – dative - keinem/keiner",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Polarity=Neg;PronType=Art;Case=Dat"
+    },
+    {
+      "id": "G.NOUN.GENDER.BASICS",
+      "title_de": "Noun gender basics",
+      "title_ko": "성 추정 규칙(어미 힌트)",
+      "title_en": "Noun gender basics",
+      "cefr_level": "A1",
+      "category": "nouns",
+      "subcategory": "Nouns",
+      "tags": [
+        "성 추정 규칙(어미 힌트)"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Noun gender basics - 성 추정 규칙(어미 힌트)",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Gender=*"
+    },
+    {
+      "id": "G.NOUN.PLURAL.BASICS",
+      "title_de": "Plural formation basics",
+      "title_ko": "복수 어미/움라우트",
+      "title_en": "Plural formation basics",
+      "cefr_level": "A1",
+      "category": "nouns",
+      "subcategory": "Nouns",
+      "tags": [
+        "복수 어미/움라우트"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.NOUN.GENDER.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Plural formation basics - 복수 어미/움라우트",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Number=Plur"
+    },
+    {
+      "id": "G.CASE.NOM",
+      "title_de": "Case",
+      "title_ko": "주어 판정",
+      "title_en": "Case – nominative (subject)",
+      "cefr_level": "A1",
+      "category": "cases",
+      "subcategory": "Nouns & Case",
+      "tags": [
+        "Case",
+        "nominative (subject)",
+        "주어 판정"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Case – nominative (subject) - 주어 판정",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Case=Nom;nsubj"
+    },
+    {
+      "id": "G.CASE.ACC",
+      "title_de": "Case",
+      "title_ko": "직목",
+      "title_en": "Case – accusative (direct object)",
+      "cefr_level": "A1",
+      "category": "cases",
+      "subcategory": "Nouns & Case",
+      "tags": [
+        "Case",
+        "accusative (direct object)",
+        "직목"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CASE.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Case – accusative (direct object) - 직목",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Case=Acc;obj"
+    },
+    {
+      "id": "G.CASE.DAT",
+      "title_de": "Case",
+      "title_ko": "간목/전치사구",
+      "title_en": "Case – dative (indirect object)",
+      "cefr_level": "A2",
+      "category": "cases",
+      "subcategory": "Nouns & Case",
+      "tags": [
+        "Case",
+        "dative (indirect object)",
+        "간목/전치사구"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CASE.ACC"
+      ],
+      "related_topics": [],
+      "summary": "Case – dative (indirect object) - 간목/전치사구",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Case=Dat;iobj|obl"
+    },
+    {
+      "id": "G.PRON.PERS.A1",
+      "title_de": "Personal pronouns (A1 set)",
+      "title_ko": "ich/du/er/sie/es 등",
+      "title_en": "Personal pronouns (A1 set)",
+      "cefr_level": "A1",
+      "category": "pronouns",
+      "subcategory": "Pronouns",
+      "tags": [
+        "ich/du/er/sie/es 등"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Personal pronouns (A1 set) - ich/du/er/sie/es 등",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Prs;Case=Nom/Acc"
+    },
+    {
+      "id": "G.PRON.REFL.BASICS",
+      "title_de": "Reflexive pronouns basics",
+      "title_ko": "mir/mich/dir/dich 등",
+      "title_en": "Reflexive pronouns basics",
+      "cefr_level": "A2",
+      "category": "pronouns",
+      "subcategory": "Pronouns",
+      "tags": [
+        "mir/mich/dir/dich 등"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.PRON.PERS.A1"
+      ],
+      "related_topics": [],
+      "summary": "Reflexive pronouns basics - mir/mich/dir/dich 등",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Prs;Reflex=Yes"
+    },
+    {
+      "id": "G.PRON.DEMO",
+      "title_de": "Demonstratives (dieser/jener)",
+      "title_ko": "이/저/그",
+      "title_en": "Demonstratives (dieser/jener)",
+      "cefr_level": "A2",
+      "category": "pronouns",
+      "subcategory": "Pronouns",
+      "tags": [
+        "이/저/그"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.DEF.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Demonstratives (dieser/jener) - 이/저/그",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Dem"
+    },
+    {
+      "id": "G.ADJ.PRED.PREDICATE",
+      "title_de": "Predicate adjectives (nicht-decl.)",
+      "title_ko": "서술형용사",
+      "title_en": "Predicate adjectives (nicht-decl.)",
+      "cefr_level": "A1",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "서술형용사"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Predicate adjectives (nicht-decl.) - 서술형용사",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "ADJ as root/cop"
+    },
+    {
+      "id": "G.ADJ.ATTR.WEAK",
+      "title_de": "Attributive adj",
+      "title_ko": "정관사 후 약변화",
+      "title_en": "Attributive adj – weak declension",
+      "cefr_level": "A2",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "Attributive adj",
+        "weak declension",
+        "정관사 후 약변화"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.DEF.*"
+      ],
+      "related_topics": [],
+      "summary": "Attributive adj – weak declension - 정관사 후 약변화",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "AdjType=Attr;Decl=Weak"
+    },
+    {
+      "id": "G.ADJ.ATTR.MIXED",
+      "title_de": "Attributive adj",
+      "title_ko": "부정관사 후 혼합",
+      "title_en": "Attributive adj – mixed declension",
+      "cefr_level": "A2",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "Attributive adj",
+        "mixed declension",
+        "부정관사 후 혼합"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.INDEF.*"
+      ],
+      "related_topics": [],
+      "summary": "Attributive adj – mixed declension - 부정관사 후 혼합",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "AdjType=Attr;Decl=Mixed"
+    },
+    {
+      "id": "G.ADJ.ATTR.STRONG",
+      "title_de": "Attributive adj",
+      "title_ko": "무관사/소유사",
+      "title_en": "Attributive adj – strong declension",
+      "cefr_level": "B1",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "Attributive adj",
+        "strong declension",
+        "무관사/소유사"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.NOUN.GENDER.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Attributive adj – strong declension - 무관사/소유사",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "AdjType=Attr;Decl=Strong"
+    },
+    {
+      "id": "G.ADJ.COMP",
+      "title_de": "Comparatives (-er/+als)",
+      "title_ko": "großer als …",
+      "title_en": "Comparatives (-er/+als)",
+      "cefr_level": "A2",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "großer als …"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Comparatives (-er/+als) - großer als …",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Degree=Cmp"
+    },
+    {
+      "id": "G.ADJ.SUP",
+      "title_de": "Superlatives (am -sten/der -ste)",
+      "title_ko": "am schönsten/der schönste",
+      "title_en": "Superlatives (am -sten/der -ste)",
+      "cefr_level": "A2",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "am schönsten/der schönste"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ADJ.COMP"
+      ],
+      "related_topics": [],
+      "summary": "Superlatives (am -sten/der -ste) - am schönsten/der schönste",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Degree=Sup"
+    },
+    {
+      "id": "G.V.SEVERN.SEP",
+      "title_de": "Separable prefix verbs",
+      "title_ko": "anrufen→Ich rufe … an",
+      "title_en": "Separable prefix verbs – present",
+      "cefr_level": "A1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Separable prefix verbs",
+        "present",
+        "anrufen→Ich rufe … an"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Separable prefix verbs – present - anrufen→Ich rufe … an",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbType=Particle;Part=Sep"
+    },
+    {
+      "id": "G.V.SEVERN.NONSEP",
+      "title_de": "Non-separable prefix verbs",
+      "title_ko": "verstehen 등",
+      "title_en": "Non-separable prefix verbs",
+      "cefr_level": "A1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "verstehen 등"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Non-separable prefix verbs - verstehen 등",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbType=Particle;Part=NonSep"
+    },
+    {
+      "id": "G.V.MODAL.PRES",
+      "title_de": "Modal verbs",
+      "title_ko": "können/müssen…",
+      "title_en": "Modal verbs – present",
+      "cefr_level": "A1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Modal verbs",
+        "present",
+        "können/müssen…"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.WORDORDER.V2"
+      ],
+      "related_topics": [],
+      "summary": "Modal verbs – present - können/müssen…",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbType=Modal;Tense=Pres"
+    },
+    {
+      "id": "G.V.MODAL.PRET",
+      "title_de": "Modal verbs",
+      "title_ko": "konnten/mussten…",
+      "title_en": "Modal verbs – Präteritum",
+      "cefr_level": "B1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Modal verbs",
+        "Präteritum",
+        "konnten/mussten…"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.MODAL.PRES"
+      ],
+      "related_topics": [],
+      "summary": "Modal verbs – Präteritum - konnten/mussten…",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Tense=Past"
+    },
+    {
+      "id": "G.V.COP.SEIN",
+      "title_de": "Hilfsverb/Copula sein",
+      "title_ko": "ich bin/war/gewesen",
+      "title_en": "Hilfsverb/Copula sein",
+      "cefr_level": "A1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "ich bin/war/gewesen"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Hilfsverb/Copula sein - ich bin/war/gewesen",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Aux=Sein"
+    },
+    {
+      "id": "G.V.AUX.HABEN",
+      "title_de": "Auxiliary haben",
+      "title_ko": "habe/hatte/gehabt",
+      "title_en": "Auxiliary haben",
+      "cefr_level": "A1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "habe/hatte/gehabt"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Auxiliary haben - habe/hatte/gehabt",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Aux=Haben"
+    },
+    {
+      "id": "G.V.TENSE.PRES",
+      "title_de": "Präsens",
+      "title_ko": "현재시제",
+      "title_en": "Präsens – regular/irregular",
+      "cefr_level": "A1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Präsens",
+        "regular/irregular",
+        "현재시제"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Präsens – regular/irregular - 현재시제",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Tense=Pres;VerbForm=Fin"
+    },
+    {
+      "id": "G.V.TENSE.PRET",
+      "title_de": "Präteritum (simple past",
+      "title_ko": "Tense=Past",
+      "title_en": "Präteritum (simple past",
+      "cefr_level": "Verbs",
+      "category": "other",
+      "subcategory": "Grammar",
+      "tags": [
+        "Tense=Past"
+      ],
+      "difficulty_score": 2.5,
+      "estimated_time": 15,
+      "prerequisites": [
+        "A2"
+      ],
+      "related_topics": [],
+      "summary": "Präteritum (simple past - Tense=Past",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "G.V.TENSE.PRES"
+    },
+    {
+      "id": "G.V.TENSE.PERF",
+      "title_de": "Perfekt (haben/sein + Part.II)",
+      "title_ko": "ist gegangen/hat gespielt",
+      "title_en": "Perfekt (haben/sein + Part.II)",
+      "cefr_level": "A2",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "ist gegangen/hat gespielt"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.AUX.*"
+      ],
+      "related_topics": [],
+      "summary": "Perfekt (haben/sein + Part.II) - ist gegangen/hat gespielt",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Tense=Perf;Aux=*"
+    },
+    {
+      "id": "G.V.PARTICIPLE.II",
+      "title_de": "Partizip II formation",
+      "title_ko": "ge-…-t/en",
+      "title_en": "Partizip II formation",
+      "cefr_level": "A2",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "ge-…-t/en"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.TENSE.PERF"
+      ],
+      "related_topics": [],
+      "summary": "Partizip II formation - ge-…-t/en",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbForm=Part"
+    },
+    {
+      "id": "G.V.REFL.BASICS",
+      "title_de": "Reflexive verbs basics",
+      "title_ko": "sich freuen 등",
+      "title_en": "Reflexive verbs basics",
+      "cefr_level": "A2",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "sich freuen 등"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.PRON.REFL.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Reflexive verbs basics - sich freuen 등",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Reflex=Yes"
+    },
+    {
+      "id": "G.V.DITRANS.GIVE",
+      "title_de": "Valency: geben (Dat+Acc)",
+      "title_ko": "jemandem etwas geben",
+      "title_en": "Valency: geben (Dat+Acc)",
+      "cefr_level": "A2",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "jemandem etwas geben"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CASE.DAT"
+      ],
+      "related_topics": [],
+      "summary": "Valency: geben (Dat+Acc) - jemandem etwas geben",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "subcat Dat+Acc"
+    },
+    {
+      "id": "G.NEG.NICHT",
+      "title_de": "Negation with nicht (placement)",
+      "title_ko": "문장 위치 규칙",
+      "title_en": "Negation with nicht (placement)",
+      "cefr_level": "A1",
+      "category": "negation",
+      "subcategory": "Negation",
+      "tags": [
+        "문장 위치 규칙"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Negation with nicht (placement) - 문장 위치 규칙",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Polarity=Neg"
+    },
+    {
+      "id": "G.NEG.KEIN",
+      "title_de": "Negation with kein (as det.)",
+      "title_ko": "명사 부정",
+      "title_en": "Negation with kein (as det.)",
+      "cefr_level": "A1",
+      "category": "negation",
+      "subcategory": "Negation",
+      "tags": [
+        "명사 부정"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.INDEF.NOM"
+      ],
+      "related_topics": [],
+      "summary": "Negation with kein (as det.) - 명사 부정",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Polarity=Neg;PronType=Art"
+    },
+    {
+      "id": "G.WO.V2",
+      "title_de": "Main clause V2 word order",
+      "title_ko": "오늘은 ich? → Heute trinke ich …",
+      "title_en": "Main clause V2 word order",
+      "cefr_level": "A1",
+      "category": "word_order",
+      "subcategory": "Word Order",
+      "tags": [
+        "오늘은 ich? → Heute trinke ich …"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Main clause V2 word order - 오늘은 ich? → Heute trinke ich …",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbPos=V2"
+    },
+    {
+      "id": "G.WO.V1",
+      "title_de": "Yes/No questions (V1)",
+      "title_ko": "Hast du …?",
+      "title_en": "Yes/No questions (V1)",
+      "cefr_level": "A1",
+      "category": "word_order",
+      "subcategory": "Word Order",
+      "tags": [
+        "Hast du …?"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Yes/No questions (V1) - Hast du …?",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbPos=V1"
+    },
+    {
+      "id": "G.WO.WH",
+      "title_de": "Wh-questions",
+      "title_ko": "Wo/Wann/Wie …",
+      "title_en": "Wh-questions",
+      "cefr_level": "A1",
+      "category": "word_order",
+      "subcategory": "Word Order",
+      "tags": [
+        "Wo/Wann/Wie …"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Wh-questions - Wo/Wann/Wie …",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "IntType=Wh"
+    },
+    {
+      "id": "G.WO.FIELDS",
+      "title_de": "Topicalization (Vorfeld)",
+      "title_ko": "Heute… trinke ich…",
+      "title_en": "Topicalization (Vorfeld)",
+      "cefr_level": "A2",
+      "category": "word_order",
+      "subcategory": "Word Order",
+      "tags": [
+        "Heute… trinke ich…"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Topicalization (Vorfeld) - Heute… trinke ich…",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Adv|Obj in VF + V2"
+    },
+    {
+      "id": "G.WO.NEBEN.VFINAL",
+      "title_de": "Subordinate V-final (weil/dass)",
+      "title_ko": "weil … ich **gehe**",
+      "title_en": "Subordinate V-final (weil/dass)",
+      "cefr_level": "A2",
+      "category": "word_order",
+      "subcategory": "Word Order",
+      "tags": [
+        "weil … ich **gehe**"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CONJ.SUBORD.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Subordinate V-final (weil/dass) - weil … ich **gehe**",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbPos=Vfinal"
+    },
+    {
+      "id": "G.WO.ORD.ADV.POS",
+      "title_de": "Adverb position order (TMP/CAU/MOD/LOC)",
+      "title_ko": "시간-이유-방법-장소",
+      "title_en": "Adverb position order (TMP/CAU/MOD/LOC)",
+      "cefr_level": "B1",
+      "category": "word_order",
+      "subcategory": "Word Order",
+      "tags": [
+        "시간-이유-방법-장소"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Adverb position order (TMP/CAU/MOD/LOC) - 시간-이유-방법-장소",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Advmod ordering"
+    },
+    {
+      "id": "G.CONJ.COORD",
+      "title_de": "Coordinating conjunctions (und/aber/oder/denn)",
+      "title_ko": "어순 변화 없음",
+      "title_en": "Coordinating conjunctions (und/aber/oder/denn)",
+      "cefr_level": "A1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "어순 변화 없음"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Coordinating conjunctions (und/aber/oder/denn) - 어순 변화 없음",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "cc;conj"
+    },
+    {
+      "id": "G.CONJ.SUBORD.BASICS",
+      "title_de": "Subordinating conj. (weil/dass/wenn)",
+      "title_ko": "종속절 V-final",
+      "title_en": "Subordinating conj. (weil/dass/wenn)",
+      "cefr_level": "A2",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "종속절 V-final"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Subordinating conj. (weil/dass/wenn) - 종속절 V-final",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "mark(=SCONJ)"
+    },
+    {
+      "id": "G.CLAUSE.REL.PRON",
+      "title_de": "Relative clauses",
+      "title_ko": "관계대명사 격일치",
+      "title_en": "Relative clauses – pronouns (der/die/das)",
+      "cefr_level": "B1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "Relative clauses",
+        "pronouns (der/die/das)",
+        "관계대명사 격일치"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ART.DEF.*"
+      ],
+      "related_topics": [],
+      "summary": "Relative clauses – pronouns (der/die/das) - 관계대명사 격일치",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PronType=Rel;RelType=Attr"
+    },
+    {
+      "id": "G.CLAUSE.REL.WO",
+      "title_de": "Relative clause word order (Vfinal)",
+      "title_ko": "관계절 어순",
+      "title_en": "Relative clause word order (Vfinal)",
+      "cefr_level": "B1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "관계절 어순"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CLAUSE.REL.PRON"
+      ],
+      "related_topics": [],
+      "summary": "Relative clause word order (Vfinal) - 관계절 어순",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbPos=Vfinal"
+    },
+    {
+      "id": "G.CLAUSE.ZU.INF",
+      "title_de": "zu-Infinitiv (um/ohne/anstatt … zu)",
+      "title_ko": "목적/부정/대신에",
+      "title_en": "zu-Infinitiv (um/ohne/anstatt … zu)",
+      "cefr_level": "B1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "목적/부정/대신에"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.TENSE.PRES"
+      ],
+      "related_topics": [],
+      "summary": "zu-Infinitiv (um/ohne/anstatt … zu) - 목적/부정/대신에",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbForm=Inf;Particle=zu"
+    },
+    {
+      "id": "G.QUES.YESNO",
+      "title_de": "Yes/No question formation",
+      "title_ko": "동사 1위치",
+      "title_en": "Yes/No question formation",
+      "cefr_level": "A1",
+      "category": "questions",
+      "subcategory": "Questions",
+      "tags": [
+        "동사 1위치"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V1"
+      ],
+      "related_topics": [],
+      "summary": "Yes/No question formation - 동사 1위치",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "VerbPos=V1"
+    },
+    {
+      "id": "G.QUES.WH",
+      "title_de": "Wh-question formation",
+      "title_ko": "의문사 도치",
+      "title_en": "Wh-question formation",
+      "cefr_level": "A1",
+      "category": "questions",
+      "subcategory": "Questions",
+      "tags": [
+        "의문사 도치"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.WH"
+      ],
+      "related_topics": [],
+      "summary": "Wh-question formation - 의문사 도치",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "IntType=Wh"
+    },
+    {
+      "id": "G.IMP.BASIC",
+      "title_de": "Imperatives",
+      "title_ko": "Bitte … / Mach …",
+      "title_en": "Imperatives – du/ihr/Sie",
+      "cefr_level": "A2",
+      "category": "imperatives",
+      "subcategory": "Imperatives",
+      "tags": [
+        "Imperatives",
+        "du/ihr/Sie",
+        "Bitte … / Mach …"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.TENSE.PRES"
+      ],
+      "related_topics": [],
+      "summary": "Imperatives – du/ihr/Sie - Bitte … / Mach …",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Mood=Imp"
+    },
+    {
+      "id": "G.PREP.ACC",
+      "title_de": "Prepositions",
+      "title_ko": "목적격 지배",
+      "title_en": "Prepositions – accusative set (für/ohne/… )",
+      "cefr_level": "A2",
+      "category": "prepositions",
+      "subcategory": "Prepositions",
+      "tags": [
+        "Prepositions",
+        "accusative set (für/ohne/… )",
+        "목적격 지배"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CASE.ACC"
+      ],
+      "related_topics": [],
+      "summary": "Prepositions – accusative set (für/ohne/… ) - 목적격 지배",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "case=Acc"
+    },
+    {
+      "id": "G.PREP.DAT",
+      "title_de": "Prepositions",
+      "title_ko": "3격 지배",
+      "title_en": "Prepositions – dative set (mit/bei/… )",
+      "cefr_level": "A2",
+      "category": "prepositions",
+      "subcategory": "Prepositions",
+      "tags": [
+        "Prepositions",
+        "dative set (mit/bei/… )",
+        "3격 지배"
+      ],
+      "difficulty_score": 2.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CASE.DAT"
+      ],
+      "related_topics": [],
+      "summary": "Prepositions – dative set (mit/bei/… ) - 3격 지배",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "case=Dat"
+    },
+    {
+      "id": "G.PREP.TWO.WAY",
+      "title_de": "Two-way preps (in/auf … Acc/Dat)",
+      "title_ko": "방향 vs 위치",
+      "title_en": "Two-way preps (in/auf … Acc/Dat)",
+      "cefr_level": "B1",
+      "category": "prepositions",
+      "subcategory": "Prepositions",
+      "tags": [
+        "방향 vs 위치"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.PREP.ACC",
+        "G.PREP.DAT"
+      ],
+      "related_topics": [],
+      "summary": "Two-way preps (in/auf … Acc/Dat) - 방향 vs 위치",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Case=Acc|Dat"
+    },
+    {
+      "id": "G.TIME.BASIC",
+      "title_de": "Time expressions",
+      "title_ko": "am Montag/um 3 Uhr",
+      "title_en": "Time expressions – basic",
+      "cefr_level": "A1",
+      "category": "time",
+      "subcategory": "Numerals&Time",
+      "tags": [
+        "Time expressions",
+        "basic",
+        "am Montag/um 3 Uhr"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Time expressions – basic - am Montag/um 3 Uhr",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "NUM/ADV time"
+    },
+    {
+      "id": "G.NUM.BASIC",
+      "title_de": "Cardinals 0",
+      "title_ko": "erstens/zweiten",
+      "title_en": "Cardinals 0–100 & ordinals",
+      "cefr_level": "A1",
+      "category": "time",
+      "subcategory": "Numerals&Time",
+      "tags": [
+        "Cardinals 0",
+        "100 & ordinals",
+        "erstens/zweiten"
+      ],
+      "difficulty_score": 1.0,
+      "estimated_time": 15,
+      "prerequisites": [],
+      "related_topics": [],
+      "summary": "Cardinals 0–100 & ordinals - erstens/zweiten",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "NUM"
+    },
+    {
+      "id": "G.PART.DISKURS.BAS",
+      "title_de": "Modal particles (ja/doch/mal)",
+      "title_ko": "어조/뉘앙스",
+      "title_en": "Modal particles (ja/doch/mal)",
+      "cefr_level": "B2",
+      "category": "particles",
+      "subcategory": "Particles",
+      "tags": [
+        "어조/뉘앙스"
+      ],
+      "difficulty_score": 4.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.WO.V2"
+      ],
+      "related_topics": [],
+      "summary": "Modal particles (ja/doch/mal) - 어조/뉘앙스",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "PartType=Modal"
+    },
+    {
+      "id": "G.ADV.CAUSAL",
+      "title_de": "Subj/Adv clauses of cause (weil/denn)",
+      "title_ko": "이유절",
+      "title_en": "Subj/Adv clauses of cause (weil/denn)",
+      "cefr_level": "B1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "이유절"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CONJ.SUBORD.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Subj/Adv clauses of cause (weil/denn) - 이유절",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "mark;advcl"
+    },
+    {
+      "id": "G.ADV.COND",
+      "title_de": "Conditional (wenn/falls)",
+      "title_ko": "조건절",
+      "title_en": "Conditional (wenn/falls)",
+      "cefr_level": "B1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "조건절"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CONJ.SUBORD.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Conditional (wenn/falls) - 조건절",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "mark;advcl"
+    },
+    {
+      "id": "G.ADV.CONCESS",
+      "title_de": "Concessive (obwohl)",
+      "title_ko": "양보절",
+      "title_en": "Concessive (obwohl)",
+      "cefr_level": "B1",
+      "category": "clauses",
+      "subcategory": "Clauses",
+      "tags": [
+        "양보절"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.CONJ.SUBORD.BASICS"
+      ],
+      "related_topics": [],
+      "summary": "Concessive (obwohl) - 양보절",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "mark;advcl"
+    },
+    {
+      "id": "G.V.PASSIVE.PRES",
+      "title_de": "Passiv",
+      "title_ko": "Das Haus wird gebaut.",
+      "title_en": "Passiv – Präsens (werden + Part.II)",
+      "cefr_level": "B1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Passiv",
+        "Präsens (werden + Part.II)",
+        "Das Haus wird gebaut."
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.PARTICIPLE.II"
+      ],
+      "related_topics": [],
+      "summary": "Passiv – Präsens (werden + Part.II) - Das Haus wird gebaut.",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Voice=Pass;Tense=Pres"
+    },
+    {
+      "id": "G.V.PASSIVE.PAST",
+      "title_de": "Passiv",
+      "title_ko": "ist gebaut worden",
+      "title_en": "Passiv – Prät/Perf (wurde/ist … worden)",
+      "cefr_level": "B2",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Passiv",
+        "Prät/Perf (wurde/ist … worden)",
+        "ist gebaut worden"
+      ],
+      "difficulty_score": 4.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.PASSIVE.PRES"
+      ],
+      "related_topics": [],
+      "summary": "Passiv – Prät/Perf (wurde/ist … worden) - ist gebaut worden",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Voice=Pass;Tense=Past/Perf"
+    },
+    {
+      "id": "G.V.FUT.I",
+      "title_de": "Future I (werden + Inf.)",
+      "title_ko": "Ich werde gehen.",
+      "title_en": "Future I (werden + Inf.)",
+      "cefr_level": "B1",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Ich werde gehen."
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.TENSE.PRES"
+      ],
+      "related_topics": [],
+      "summary": "Future I (werden + Inf.) - Ich werde gehen.",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Tense=Fut"
+    },
+    {
+      "id": "G.V.KONJ.II.PRES",
+      "title_de": "Konjunktiv II",
+      "title_ko": "Ich würde … / ich ginge",
+      "title_en": "Konjunktiv II – Präsens (würde/irr. Formen)",
+      "cefr_level": "B2",
+      "category": "verbs",
+      "subcategory": "Verbs",
+      "tags": [
+        "Konjunktiv II",
+        "Präsens (würde/irr. Formen)",
+        "Ich würde … / ich ginge"
+      ],
+      "difficulty_score": 4.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.V.MODAL.PRES",
+        "G.V.TENSE.PRET"
+      ],
+      "related_topics": [],
+      "summary": "Konjunktiv II – Präsens (würde/irr. Formen) - Ich würde … / ich ginge",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Mood=Cnd/Subj"
+    },
+    {
+      "id": "G.WO.NEG.POS",
+      "title_de": "Negation placement rules",
+      "title_ko": "부사/구/문장부정 위치",
+      "title_en": "Negation placement rules",
+      "cefr_level": "B1",
+      "category": "negation",
+      "subcategory": "Negation",
+      "tags": [
+        "부사/구/문장부정 위치"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.NEG.NICHT"
+      ],
+      "related_topics": [],
+      "summary": "Negation placement rules - 부사/구/문장부정 위치",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "Scope-aware"
+    },
+    {
+      "id": "G.ADJ.ENDINGS.OVERVIEW",
+      "title_de": "Adjective endings",
+      "title_ko": "요약표 기반 점검",
+      "title_en": "Adjective endings – overview table",
+      "cefr_level": "B1",
+      "category": "adjectives",
+      "subcategory": "Adjectives",
+      "tags": [
+        "Adjective endings",
+        "overview table",
+        "요약표 기반 점검"
+      ],
+      "difficulty_score": 3.0,
+      "estimated_time": 15,
+      "prerequisites": [
+        "G.ADJ.ATTR.*"
+      ],
+      "related_topics": [],
+      "summary": "Adjective endings – overview table - 요약표 기반 점검",
+      "rules": [],
+      "examples": [],
+      "exercises": [],
+      "common_mistakes": [],
+      "source": "Skill Tree CSV",
+      "created_at": "",
+      "updated_at": "",
+      "ud_features": "AdjType=Attr"
+    }
+  ]
+}

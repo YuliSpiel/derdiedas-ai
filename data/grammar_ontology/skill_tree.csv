@@ -1,0 +1,67 @@
+skill_id,name,domain,area,cefr,prerequisites,ud_features,hint
+G.ART.DEF.NOM,Definite article – nominative,Grammar,Articles,A1,,PronType=Art;Definite=Def;Case=Nom,Der/Die/Das + 주어
+G.ART.DEF.ACC,Definite article – accusative,Grammar,Articles,A1,G.ART.DEF.NOM,PronType=Art;Definite=Def;Case=Acc,den/die/das 목적격
+G.ART.DEF.DAT,Definite article – dative,Grammar,Articles,A2,G.ART.DEF.ACC,PronType=Art;Definite=Def;Case=Dat,dem/der/den+Dat
+G.ART.INDEF.NOM,Indefinite article – nominative,Grammar,Articles,A1,,PronType=Art;Definite=Ind;Case=Nom,ein/eine 주격
+G.ART.INDEF.ACC,Indefinite article – accusative,Grammar,Articles,A1,G.ART.INDEF.NOM,PronType=Art;Definite=Ind;Case=Acc,keinen 등 포함
+G.ART.INDEF.DAT,Indefinite article – dative,Grammar,Articles,A2,G.ART.INDEF.ACC,PronType=Art;Definite=Ind;Case=Dat, einem/einer
+G.ART.NEG.NOM,Negation with kein – nominative,Grammar,Articles,A1,G.ART.INDEF.NOM,Polarity=Neg;PronType=Art;Case=Nom,kein/keine 주격
+G.ART.NEG.ACC,Negation with kein – accusative,Grammar,Articles,A1,G.ART.NEG.NOM,Polarity=Neg;PronType=Art;Case=Acc,keinen/keine 목적격
+G.ART.NEG.DAT,Negation with kein – dative,Grammar,Articles,A2,G.ART.NEG.ACC,Polarity=Neg;PronType=Art;Case=Dat,keinem/keiner
+G.NOUN.GENDER.BASICS,Noun gender basics,Grammar,Nouns,A1,,Gender=*,성 추정 규칙(어미 힌트)
+G.NOUN.PLURAL.BASICS,Plural formation basics,Grammar,Nouns,A1,G.NOUN.GENDER.BASICS,Number=Plur,복수 어미/움라우트
+G.CASE.NOM,Case – nominative (subject),Grammar,Nouns & Case,A1,,Case=Nom;nsubj,주어 판정
+G.CASE.ACC,Case – accusative (direct object),Grammar,Nouns & Case,A1,G.CASE.NOM,Case=Acc;obj,직목
+G.CASE.DAT,Case – dative (indirect object),Grammar,Nouns & Case,A2,G.CASE.ACC,Case=Dat;iobj|obl,간목/전치사구
+G.PRON.PERS.A1,Personal pronouns (A1 set),Grammar,Pronouns,A1,,PronType=Prs;Case=Nom/Acc,ich/du/er/sie/es 등
+G.PRON.REFL.BASICS,Reflexive pronouns basics,Grammar,Pronouns,A2,G.PRON.PERS.A1,PronType=Prs;Reflex=Yes,mir/mich/dir/dich 등
+G.PRON.DEMO,Demonstratives (dieser/jener),Grammar,Pronouns,A2,G.ART.DEF.NOM,PronType=Dem,이/저/그
+G.ADJ.PRED.PREDICATE,Predicate adjectives (nicht-decl.),Grammar,Adjectives,A1,,ADJ as root/cop,서술형용사
+G.ADJ.ATTR.WEAK,Attributive adj – weak declension,Grammar,Adjectives,A2,G.ART.DEF.*,AdjType=Attr;Decl=Weak,정관사 후 약변화
+G.ADJ.ATTR.MIXED,Attributive adj – mixed declension,Grammar,Adjectives,A2,G.ART.INDEF.*,AdjType=Attr;Decl=Mixed,부정관사 후 혼합
+G.ADJ.ATTR.STRONG,Attributive adj – strong declension,Grammar,Adjectives,B1,G.NOUN.GENDER.BASICS,AdjType=Attr;Decl=Strong,무관사/소유사
+G.ADJ.COMP,Comparatives (-er/+als),Grammar,Adjectives,A2,,Degree=Cmp,großer als …
+G.ADJ.SUP,Superlatives (am -sten/der -ste),Grammar,Adjectives,A2,G.ADJ.COMP,Degree=Sup,am schönsten/der schönste
+G.V.SEVERN.SEP,Separable prefix verbs – present,Grammar,Verbs,A1,,VerbType=Particle;Part=Sep,anrufen→Ich rufe … an
+G.V.SEVERN.NONSEP,Non-separable prefix verbs,Grammar,Verbs,A1,,VerbType=Particle;Part=NonSep,verstehen 등
+G.V.MODAL.PRES,Modal verbs – present,Grammar,Verbs,A1,G.V.WORDORDER.V2,VerbType=Modal;Tense=Pres,können/müssen…
+G.V.MODAL.PRET,Modal verbs – Präteritum,Grammar,Verbs,B1,G.V.MODAL.PRES,Tense=Past,konnten/mussten…
+G.V.COP.SEIN,Hilfsverb/Copula sein,Grammar,Verbs,A1,,Aux=Sein,ich bin/war/gewesen
+G.V.AUX.HABEN,Auxiliary haben,Grammar,Verbs,A1,,Aux=Haben,habe/hatte/gehabt
+G.V.TENSE.PRES,Präsens – regular/irregular,Grammar,Verbs,A1,,Tense=Pres;VerbForm=Fin,현재시제
+G.V.TENSE.PRET,Präteritum (simple past, high-freq),Grammar,Verbs,A2,G.V.TENSE.PRES,Tense=Past,war/hatte/ging 등
+G.V.TENSE.PERF,Perfekt (haben/sein + Part.II),Grammar,Verbs,A2,G.V.AUX.*,Tense=Perf;Aux=*,ist gegangen/hat gespielt
+G.V.PARTICIPLE.II,Partizip II formation,Grammar,Verbs,A2,G.V.TENSE.PERF,VerbForm=Part,ge-…-t/en
+G.V.REFL.BASICS,Reflexive verbs basics,Grammar,Verbs,A2,G.PRON.REFL.BASICS,Reflex=Yes,sich freuen 등
+G.V.DITRANS.GIVE,Valency: geben (Dat+Acc),Grammar,Verbs,A2,G.CASE.DAT,subcat Dat+Acc,jemandem etwas geben
+G.NEG.NICHT,Negation with nicht (placement),Grammar,Negation,A1,,Polarity=Neg,문장 위치 규칙
+G.NEG.KEIN,Negation with kein (as det.),Grammar,Negation,A1,G.ART.INDEF.NOM,Polarity=Neg;PronType=Art,명사 부정
+G.WO.V2,Main clause V2 word order,Grammar,Word Order,A1,,VerbPos=V2,오늘은 ich? → Heute trinke ich …
+G.WO.V1,Yes/No questions (V1),Grammar,Word Order,A1,G.WO.V2,VerbPos=V1,Hast du …?
+G.WO.WH,Wh-questions,Grammar,Word Order,A1,G.WO.V2,IntType=Wh,Wo/Wann/Wie …
+G.WO.FIELDS,Topicalization (Vorfeld),Grammar,Word Order,A2,G.WO.V2,Adv|Obj in VF + V2,Heute… trinke ich…
+G.WO.NEBEN.VFINAL,Subordinate V-final (weil/dass),Grammar,Word Order,A2,G.CONJ.SUBORD.BASICS,VerbPos=Vfinal,weil … ich **gehe**
+G.WO.ORD.ADV.POS,Adverb position order (TMP/CAU/MOD/LOC),Grammar,Word Order,B1,G.WO.V2,Advmod ordering,시간-이유-방법-장소
+G.CONJ.COORD,Coordinating conjunctions (und/aber/oder/denn),Grammar,Clauses,A1,G.WO.V2,cc;conj,어순 변화 없음
+G.CONJ.SUBORD.BASICS,Subordinating conj. (weil/dass/wenn),Grammar,Clauses,A2,G.WO.V2,mark(=SCONJ),종속절 V-final
+G.CLAUSE.REL.PRON,Relative clauses – pronouns (der/die/das),Grammar,Clauses,B1,G.ART.DEF.*,PronType=Rel;RelType=Attr,관계대명사 격일치
+G.CLAUSE.REL.WO,Relative clause word order (Vfinal),Grammar,Clauses,B1,G.CLAUSE.REL.PRON,VerbPos=Vfinal,관계절 어순
+G.CLAUSE.ZU.INF,zu-Infinitiv (um/ohne/anstatt … zu),Grammar,Clauses,B1,G.V.TENSE.PRES,VerbForm=Inf;Particle=zu,목적/부정/대신에
+G.QUES.YESNO,Yes/No question formation,Grammar,Questions,A1,G.WO.V1,VerbPos=V1,동사 1위치
+G.QUES.WH,Wh-question formation,Grammar,Questions,A1,G.WO.WH,IntType=Wh,의문사 도치
+G.IMP.BASIC,Imperatives – du/ihr/Sie,Grammar,Imperatives,A2,G.V.TENSE.PRES,Mood=Imp,Bitte … / Mach …
+G.PREP.ACC,Prepositions – accusative set (für/ohne/… ),Grammar,Prepositions,A2,G.CASE.ACC,case=Acc,목적격 지배
+G.PREP.DAT,Prepositions – dative set (mit/bei/… ),Grammar,Prepositions,A2,G.CASE.DAT,case=Dat,3격 지배
+G.PREP.TWO.WAY,Two-way preps (in/auf … Acc/Dat),Grammar,Prepositions,B1,G.PREP.ACC;G.PREP.DAT,Case=Acc|Dat,방향 vs 위치
+G.TIME.BASIC,Time expressions – basic,Grammar,Numerals&Time,A1,,NUM/ADV time,am Montag/um 3 Uhr
+G.NUM.BASIC,Cardinals 0–100 & ordinals,Grammar,Numerals&Time,A1,,NUM,erstens/zweiten
+G.PART.DISKURS.BAS,Modal particles (ja/doch/mal),Grammar,Particles,B2,G.WO.V2,PartType=Modal,어조/뉘앙스
+G.ADV.CAUSAL,Subj/Adv clauses of cause (weil/denn),Grammar,Clauses,B1,G.CONJ.SUBORD.BASICS,mark;advcl,이유절
+G.ADV.COND,Conditional (wenn/falls),Grammar,Clauses,B1,G.CONJ.SUBORD.BASICS,mark;advcl,조건절
+G.ADV.CONCESS,Concessive (obwohl),Grammar,Clauses,B1,G.CONJ.SUBORD.BASICS,mark;advcl,양보절
+G.V.PASSIVE.PRES,Passiv – Präsens (werden + Part.II),Grammar,Verbs,B1,G.V.PARTICIPLE.II,Voice=Pass;Tense=Pres,Das Haus wird gebaut.
+G.V.PASSIVE.PAST,Passiv – Prät/Perf (wurde/ist … worden),Grammar,Verbs,B2,G.V.PASSIVE.PRES,Voice=Pass;Tense=Past/Perf,ist gebaut worden
+G.V.FUT.I,Future I (werden + Inf.),Grammar,Verbs,B1,G.V.TENSE.PRES,Tense=Fut,Ich werde gehen.
+G.V.KONJ.II.PRES,Konjunktiv II – Präsens (würde/irr. Formen),Grammar,Verbs,B2,G.V.MODAL.PRES;G.V.TENSE.PRET,Mood=Cnd/Subj,Ich würde … / ich ginge
+G.WO.NEG.POS,Negation placement rules,Grammar,Negation,B1,G.NEG.NICHT,Scope-aware,부사/구/문장부정 위치
+G.ADJ.ENDINGS.OVERVIEW,Adjective endings – overview table,Grammar,Adjectives,B1,G.ADJ.ATTR.*,AdjType=Attr,요약표 기반 점검

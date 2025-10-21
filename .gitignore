@@ -26,6 +26,8 @@ outputs/
 
 # User data
 data/
+# But keep grammar ontology structure
+!data/grammar_ontology/
 
 # Archive
 archive/
