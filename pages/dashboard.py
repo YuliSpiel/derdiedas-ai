@@ -369,28 +369,30 @@ def show_recommended_notebooks(notebooks: list):
             with st.container(border=True):
                 # 제목과 추천 뱃지
                 st.markdown(f"### {notebook.title} 🌟")
-                st.info("곧 제공될 예정입니다")
+                st.caption("적응형 주제 선정 - 당신의 실력에 맞춰 문제가 생성됩니다")
                 st.caption(f"총 학습 횟수: {notebook.total_sessions}회{f' · 최근: {notebook.last_studied}' if notebook.last_studied else ''}")
 
                 st.markdown("---")
 
-                # 버튼 (현재는 비활성화)
+                # 버튼
                 col_btn1, col_btn2 = st.columns(2)
                 with col_btn1:
-                    st.button(
+                    if st.button(
                         "📖 열기",
                         key=f"open_rec_{notebook.id}",
-                        disabled=True,
                         use_container_width=True,
                         type="primary"
-                    )
+                    ):
+                        st.session_state.selected_notebook_id = notebook.id
+                        st.switch_page("pages/learning_session.py")
                 with col_btn2:
-                    st.button(
+                    if st.button(
                         "🗑️ 삭제",
                         key=f"delete_rec_{notebook.id}",
-                        disabled=True,
                         use_container_width=True
-                    )
+                    ):
+                        st.session_state.profile_manager.delete_notebook(notebook.id)
+                        st.rerun()
 
 
 # =============================================================================

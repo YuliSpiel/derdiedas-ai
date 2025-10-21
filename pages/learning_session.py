@@ -492,6 +492,15 @@ def show_completion_stage():
                             nb.total_sessions += 1
                             from datetime import datetime
                             nb.last_studied = datetime.now().strftime("%m/%d")
+
+                            # 추천 노트북을 일반 노트북으로 변환
+                            if nb.is_recommended and nb.total_sessions > 0:
+                                nb.is_recommended = False
+                                # 선택된 스킬을 노트북에 저장
+                                if st.session_state.selected_skill_id:
+                                    nb.skill_id = st.session_state.selected_skill_id
+                                print(f"📌 추천 노트북 '{nb.title}'을(를) 내 노트북으로 이동했습니다")
+
                             updated = True
                             print(f"✅ 노트북 업데이트: {nb.title} - 세션 {nb.total_sessions}, 날짜 {nb.last_studied}")
                             break
