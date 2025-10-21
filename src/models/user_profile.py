@@ -22,6 +22,7 @@ class UserProfile:
     last_active: Optional[str] = None
     profile_icon: str = "🎓"
     profile_bg_color: str = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"  # 배경 그라디언트
+    skill_proficiency: Dict[str, float] = field(default_factory=dict)  # 스킬별 숙련도 (0-100)
     created_at: Optional[str] = None
 
     def to_dict(self) -> Dict:
@@ -36,6 +37,7 @@ class UserProfile:
             "last_active": self.last_active,
             "profile_icon": self.profile_icon,
             "profile_bg_color": self.profile_bg_color,
+            "skill_proficiency": self.skill_proficiency,
             "created_at": self.created_at,
         }
 
@@ -52,6 +54,7 @@ class UserProfile:
             last_active=data.get("last_active"),
             profile_icon=data.get("profile_icon", "🎓"),
             profile_bg_color=data.get("profile_bg_color", "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"),
+            skill_proficiency=data.get("skill_proficiency", {}),
             created_at=data.get("created_at"),
         )
 
@@ -124,11 +127,16 @@ class ProfileManager:
         with open(self.profile_file, "w", encoding="utf-8") as f:
             json.dump(profile.to_dict(), f, ensure_ascii=False, indent=2)
 
-    def update_level_from_test(self, level: str):
-        """레벨 테스트 결과 반영"""
+    def update_level_from_test(self, level: str, skill_proficiency: Dict[str, float] = None):
+        """레벨 테스트 결과 반영 (레벨 + 스킬 숙련도)"""
         profile = self.load_profile()
         profile.level = level
         profile.total_stamps += 1  # 테스트 완료로 스탬프 +1
+
+        # 스킬 숙련도 업데이트
+        if skill_proficiency:
+            profile.skill_proficiency = skill_proficiency
+
         self.save_profile(profile)
 
     def load_notebooks(self) -> List[Notebook]:

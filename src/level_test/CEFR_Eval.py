@@ -95,6 +95,9 @@ class DetailedFeedback:
     overall_comment: str
     strengths: List[str] = field(default_factory=list)
     improvements: List[str] = field(default_factory=list)
+    # GPT가 판정한 최종 레벨
+    suggested_cefr_level: str = "B1"  # A2, B1, B2, C1
+    suggested_sub_level: str = "중반"  # 초반, 중반, 후반
 
 
 @dataclass
@@ -698,6 +701,8 @@ class AIFeedbackGenerator:
                 overall_comment=result.get("overall_comment", ""),
                 strengths=result.get("strengths", []),
                 improvements=result.get("improvements", []),
+                suggested_cefr_level=result.get("suggested_cefr_level", "B1"),
+                suggested_sub_level=result.get("suggested_sub_level", "중반"),
             )
 
         except Exception as e:
@@ -754,6 +759,20 @@ class AIFeedbackGenerator:
 - 주제 이탈 여부
 - 답변의 완성도
 
+## CEFR 레벨 기준
+
+위 5가지 평가 기준을 종합하여 최종 CEFR 레벨을 판정해 주세요:
+
+- **A2**: 기초 단계. 간단한 문장 구조, 기본 어휘, 빈번한 문법 오류
+- **B1**: 중급 단계. 복잡한 문장 일부 사용, 다양한 어휘, 문법 오류 있으나 의사소통 가능
+- **B2**: 중상급 단계. 복잡한 구문 자주 사용, 풍부한 어휘, 문법이 대체로 정확
+- **C1**: 고급 단계. 복잡한 구문 능숙, 추상적 어휘 구사, 문법 거의 완벽
+
+세부 단계:
+- **초반**: 해당 레벨 진입 단계
+- **중반**: 해당 레벨의 전형적 특징
+- **후반**: 다음 레벨로 넘어가기 직전
+
 ## 응답 형식 (JSON)
 
 다음 형식으로 응답해 주세요:
@@ -771,11 +790,15 @@ class AIFeedbackGenerator:
   "task_comment": "<과제 적합성 관련 설명>",
   "overall_comment": "<전체적인 종합 평가 및 레벨 판정 근거>",
   "strengths": ["강점1", "강점2", "강점3"],
-  "improvements": ["개선점1", "개선점2", "개선점3"]
+  "improvements": ["개선점1", "개선점2", "개선점3"],
+  "suggested_cefr_level": "<A2|B1|B2|C1>",
+  "suggested_sub_level": "<초반|중반|후반>"
 }}
 
 **중요:** 반드시 한국어로 피드백을 작성하되, 독일어 예시는 독일어로 표기해 주세요.
 **중요:** 응답은 반드시 유효한 JSON 형식이어야 합니다.
+**중요:** suggested_cefr_level은 반드시 A2, B1, B2, C1 중 하나여야 합니다.
+**중요:** suggested_sub_level은 반드시 "초반", "중반", "후반" 중 하나여야 합니다.
 """
         return prompt
 
@@ -993,24 +1016,56 @@ class LevelTestSession:
         return len(self.responses) >= 5
 
     def get_final_result(self) -> Dict:
-        """최종 결과 반환 (코사인 유사도 + AI 피드백)"""
+        """최종 결과 반환 (GPT 레벨 판정 + 상세 피드백 + 스킬 숙련도)"""
         if not self.is_complete():
             raise ValueError("테스트가 아직 완료되지 않았습니다.")
 
-        # 1. 코사인 유사도 기반 레벨 판정
-        final_level, sub_level, analysis = FinalLevelAssessor.assess_final_level(
-            self.responses
-        )
-
-        # 2. AI 피드백 생성 (5개 질문-답변 쌍 종합 분석)
+        # 1. AI 피드백 생성 (5개 질문-답변 쌍 종합 분석 + 레벨 판정)
         ai_feedback = self.ai_feedback_generator.generate_feedback(
             self._asked_questions, self.responses
         )
 
+        # 2. GPT가 판정한 레벨 사용 (코사인 유사도는 참고용)
+        final_level_name = ai_feedback.suggested_cefr_level
+        sub_level_name = ai_feedback.suggested_sub_level
+
+        # 3. 코사인 유사도 기반 분석 (참고 정보로만 사용)
+        cosine_level, cosine_sub, analysis = FinalLevelAssessor.assess_final_level(
+            self.responses
+        )
+
+        print(f"\n📊 레벨 판정 결과:")
+        print(f"   GPT 판정: {final_level_name}-{sub_level_name}")
+        print(f"   코사인 유사도 참고: {cosine_level.name}-{cosine_sub.value}")
+
+        # 4. 스킬별 숙련도 평가 (GPT 판정 레벨 기준)
+        skill_proficiency = {}
+        try:
+            from level_test.skill_proficiency_assessor import SkillProficiencyAssessor
+
+            assessor = SkillProficiencyAssessor()
+            writing_samples = [resp.text for resp in self.responses]
+
+            print(f"\n📊 스킬 숙련도 평가 시작...")
+            print(f"   사용자 레벨: {final_level_name}")
+            print(f"   작문 샘플 개수: {len(writing_samples)}")
+
+            skill_proficiency = assessor.assess_proficiency(
+                user_level=final_level_name,
+                writing_samples=writing_samples
+            )
+
+            print(f"   평가 완료: {len(skill_proficiency)}개 스킬")
+
+        except Exception as e:
+            print(f"⚠️ 스킬 숙련도 평가 실패: {e}")
+            skill_proficiency = {}
+
         return {
-            "final_level": final_level.name,
-            "sub_level": sub_level.value,
-            "display_level": f"{final_level.name}-{sub_level.value}",
-            "analysis": analysis,
+            "final_level": final_level_name,
+            "sub_level": sub_level_name,
+            "display_level": f"{final_level_name}-{sub_level_name}",
+            "analysis": analysis,  # 코사인 유사도 분석은 참고용으로 유지
             "ai_feedback": ai_feedback,
+            "skill_proficiency": skill_proficiency,
         }

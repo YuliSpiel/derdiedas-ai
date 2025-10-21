@@ -522,12 +522,17 @@ def main():
 
     # 하단 네비게이션
     st.markdown("---")
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    col1, col2 = st.columns(2)
+    with col1:
         if st.button(
             "📊 레벨 테스트 하러 가기", use_container_width=True, type="primary"
         ):
             st.switch_page("pages/level_test.py")
+    with col2:
+        if st.button(
+            "📈 학습 리포트 보기", use_container_width=True
+        ):
+            st.switch_page("pages/learning_report.py")
 
 
 # =============================================================================

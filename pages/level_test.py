@@ -253,9 +253,6 @@ def show_test_screen():
             for i, resp in enumerate(session.responses):
                 st.markdown(f"**질문 {i + 1}:** {resp.question_id}")
                 st.text(resp.text)
-                st.caption(
-                    f"추정 레벨: {resp.estimated_level.name} (신뢰도: {resp.similarity_score:.1%})"
-                )
                 st.markdown("---")
 
 
@@ -312,38 +309,6 @@ def show_result_screen():
     )
     st.info(level_descriptions[result["final_level"]])
 
-    # 상세 분석
-    st.markdown("### 📈 상세 분석")
-
-    analysis = result["analysis"]
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("평균 레벨 점수", f"{analysis['average_level_value']:.2f}")
-    with col2:
-        st.metric("평균 신뢰도", f"{analysis['average_confidence']:.1%}")
-
-    # 레벨 분포
-    st.markdown("#### 답변별 레벨 분포")
-    level_dist = analysis["level_distribution"]
-    for level, count in level_dist.items():
-        if count > 0:
-            st.write(f"**{level}:** {count}개 답변")
-
-    # 각 답변별 상세 점수
-    with st.expander("🔍 답변별 상세 점수 (코사인 유사도 기반)"):
-        for i, score in enumerate(analysis["response_scores"]):
-            st.markdown(
-                f"""
-            <div class="analysis-box">
-                <strong>질문 {i + 1}:</strong> {score['question']}<br>
-                <strong>추정 레벨:</strong> {score['level']}<br>
-                <strong>신뢰도:</strong> {score['confidence']:.1%}
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
-
     # AI 피드백
     if "ai_feedback" in result:
         show_ai_feedback(result["ai_feedback"])
@@ -355,11 +320,21 @@ def show_result_screen():
 
     # 하단 버튼
     st.markdown("---")
-    # 레벨 결과를 자동으로 프로필에 저장
+    # 레벨 결과 + 스킬 숙련도를 자동으로 프로필에 저장
     try:
         profile_manager = ProfileManager()
-        profile_manager.update_level_from_test(result['display_level'])
-        st.success("✅ 레벨이 프로필에 저장되었습니다!")
+        skill_proficiency = result.get('skill_proficiency', {})
+
+        profile_manager.update_level_from_test(
+            level=result['display_level'],
+            skill_proficiency=skill_proficiency
+        )
+
+        if skill_proficiency:
+            st.success(f"✅ 레벨과 스킬 숙련도({len(skill_proficiency)}개 스킬)가 프로필에 저장되었습니다!")
+        else:
+            st.success("✅ 레벨이 프로필에 저장되었습니다!")
+
     except Exception as e:
         st.warning(f"프로필 저장 실패: {e}")
 
