@@ -31,6 +31,17 @@ st.set_page_config(
 st.markdown(
     """
 <style>
+    /* 사이드바 완전히 숨기기 */
+    [data-testid="stSidebar"] {
+        display: none;
+    }
+
+    /* 메인 컨텐츠 전체 너비 사용 */
+    .main > div {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .profile-banner {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
