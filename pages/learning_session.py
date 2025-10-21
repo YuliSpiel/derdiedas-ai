@@ -154,71 +154,119 @@ def show_concept_stage():
 def show_quiz_stage():
     """퀴즈 화면"""
     content = st.session_state.learning_content
-    questions = content["quiz_questions"][:5]  # 처음 5개만
 
+    # 세션 상태 초기화
+    if "quiz_checked" not in st.session_state:
+        st.session_state.quiz_checked = {}
+
+    # 필요한 문제 수 결정
+    total_needed = 5
+    if st.session_state.current_quiz_index >= 5:
+        # 추가 문제 단계
+        total_needed = 7
+
+    questions = content["quiz_questions"][:total_needed]
     current_idx = st.session_state.current_quiz_index
 
     # 진행률
-    progress = 0.25 + (0.25 * (current_idx / 5))
+    progress = 0.25 + (0.25 * (min(current_idx, 5) / 5))
     st.progress(progress)
-    st.caption(f"2단계 / 4단계: 문제 풀기 ({current_idx + 1}/5)")
+    st.caption(f"2단계 / 4단계: 문제 풀기 ({min(current_idx + 1, total_needed)}/{total_needed})")
 
     st.markdown("---")
 
-    # 현재 문제
-    if current_idx < len(questions):
-        question = questions[current_idx]
+    # 모든 문제 완료 확인
+    if current_idx >= len(questions):
+        show_quiz_results(len(questions))
+        return
 
-        st.markdown(f"### 문제 {current_idx + 1}")
-
-        with st.container(border=True):
-            st.markdown(f"**{question['question']}**")
-
-            # 답변 입력
-            if question['type'] == 'fill_blank':
-                user_answer = st.text_input(
-                    "답변",
-                    key=f"answer_{current_idx}",
-                    label_visibility="collapsed"
-                )
-            else:  # multiple_choice
-                user_answer = st.radio(
-                    "답변 선택",
-                    options=question['options'],
-                    key=f"answer_{current_idx}",
-                    label_visibility="collapsed"
-                )
-
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("✅ 확인", key=f"check_{current_idx}", use_container_width=True, type="primary"):
-                    if not user_answer:
-                        st.error("답변을 입력해주세요!")
+    # 이미 풀었던 문제들 표시 (간략하게)
+    for idx in range(current_idx):
+        q = questions[idx]
+        answer_data = st.session_state.quiz_answers.get(q['id'])
+        if answer_data:
+            with st.container(border=True):
+                col1, col2 = st.columns([4, 1])
+                with col1:
+                    st.caption(f"문제 {idx + 1}")
+                with col2:
+                    if answer_data['correct']:
+                        st.success("✅")
                     else:
-                        # 정답 확인
-                        is_correct = user_answer.strip().lower() == question['correct_answer'].lower()
+                        st.error("❌")
 
-                        st.session_state.quiz_answers[question['id']] = {
-                            'user_answer': user_answer,
-                            'correct': is_correct,
-                            'question': question
-                        }
+    # 현재 문제
+    question = questions[current_idx]
+    question_key = f"q_{current_idx}"
 
-                        if is_correct:
-                            st.success("✅ 정답입니다!")
-                            st.info(f"💡 {question['explanation']}")
+    st.markdown(f"### 문제 {current_idx + 1}")
 
-                            # 다음 문제로
-                            if st.button("➡️ 다음 문제", key=f"next_{current_idx}"):
-                                st.session_state.current_quiz_index += 1
-                                st.rerun()
-                        else:
-                            st.error("❌ 틀렸습니다. 다시 시도해보세요!")
-                            st.info(f"💡 힌트: {question['explanation']}")
+    with st.container(border=True):
+        # 문제 텍스트만 표시 (정답/선택지 제외)
+        # GPT가 괄호 안에 정답을 넣을 수 있으므로 제거
+        question_text = question['question']
+        # 괄호 부분 제거 (예: "__ Katze (die/der/das)" -> "__ Katze")
+        if '(' in question_text:
+            question_text = question_text.split('(')[0].strip()
 
-    else:
-        # 5문제 완료 - 정답률 계산
-        show_quiz_results(5)
+        st.markdown(f"**{question_text}**")
+
+        # 답변 입력
+        if question['type'] == 'fill_blank':
+            user_answer = st.text_input(
+                "답변을 입력하세요",
+                key=f"answer_{question_key}",
+                placeholder="답을 입력하세요..."
+            )
+        else:  # multiple_choice
+            user_answer = st.radio(
+                "답을 선택하세요",
+                options=question['options'],
+                key=f"answer_{question_key}",
+                index=None
+            )
+
+        # 확인/다음 버튼 로직
+        if st.session_state.quiz_checked.get(question_key, False):
+            # 이미 확인한 상태 - 피드백 표시
+            answer_data = st.session_state.quiz_answers.get(question['id'])
+
+            if answer_data and answer_data['correct']:
+                # 정답인 경우
+                st.success("✅ 정답입니다!")
+                st.info(f"💡 {question['explanation']}")
+
+                if st.button("➡️ 다음 문제", use_container_width=True, type="primary"):
+                    st.session_state.current_quiz_index += 1
+                    st.session_state.quiz_checked[question_key] = False
+                    st.rerun()
+            else:
+                # 오답인 경우 - 힌트 표시하고 다시 입력 가능하게
+                st.error("❌ 틀렸습니다. 다시 시도해보세요!")
+                st.warning(f"💡 힌트: {question['explanation']}")
+
+                # 다시 풀기 버튼
+                if st.button("🔄 다시 입력하기", use_container_width=True):
+                    st.session_state.quiz_checked[question_key] = False
+                    if question['id'] in st.session_state.quiz_answers:
+                        del st.session_state.quiz_answers[question['id']]
+                    st.rerun()
+        else:
+            # 아직 확인 안한 상태 - 확인 버튼
+            if st.button("✅ 확인", use_container_width=True, type="primary", disabled=not user_answer):
+                if not user_answer:
+                    st.error("답변을 입력해주세요!")
+                else:
+                    # 정답 확인
+                    is_correct = user_answer.strip().lower() == question['correct_answer'].strip().lower()
+
+                    st.session_state.quiz_answers[question['id']] = {
+                        'user_answer': user_answer,
+                        'correct': is_correct,
+                        'question': question
+                    }
+                    st.session_state.quiz_checked[question_key] = True
+                    st.rerun()
 
 
 def show_quiz_results(total_questions: int):
