@@ -74,14 +74,19 @@ class TopicSelector:
 
         # 2. JSON에서 컨텐츠 로드 (있으면)
         if self.ontology_path.exists():
-            with open(self.ontology_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                topics = data if isinstance(data, list) else data.get("topics", [])
+            try:
+                with open(self.ontology_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    topics = data if isinstance(data, list) else data.get("topics", [])
 
-                for topic in topics:
-                    skill_id = topic.get("skill_id") or topic.get("id")
-                    if skill_id in skills:
-                        skills[skill_id].update(topic)
+                    for topic in topics:
+                        skill_id = topic.get("skill_id") or topic.get("id")
+                        if skill_id in skills:
+                            skills[skill_id].update(topic)
+            except Exception as e:
+                # JSON 파싱 실패 시 CSV 메타데이터만 사용
+                print(f"⚠️ grammar_ontology.json 로딩 실패: {e}")
+                print(f"   CSV 메타데이터만 사용합니다.")
 
         return skills
 
