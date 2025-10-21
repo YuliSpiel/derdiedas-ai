@@ -19,11 +19,8 @@ import uuid
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from models import ProfileManager
 from models.learning_cycle import LearningSession, LearningStage
 from learning.topic_selector import TopicSelector
-from learning.content_generator import LearningContentGenerator
-from learning.writing_feedback import WritingFeedbackGenerator
 from services.learning_service import get_learning_service
 
 # =============================================================================
@@ -552,14 +549,20 @@ def main():
 
 
 def create_learning_session(notebook_id: str) -> LearningSession:
-    """학습 세션 생성"""
+    """학습 세션 생성 (100% API 기반)"""
     try:
-        # 1. 프로필 로드
-        profile_manager = ProfileManager()
-        profile = profile_manager.load_profile()
+        # API 서비스 초기화
+        learning_service = get_learning_service()
 
-        # 2. 노트북 정보 로드
-        notebooks = profile_manager.load_notebooks()
+        # 1. 프로필 로드 (API)
+        from models import UserProfile
+        profile_dict = learning_service.get_profile()
+        profile = UserProfile.from_dict(profile_dict)
+
+        # 2. 노트북 정보 로드 (API)
+        from models import Notebook
+        notebooks_data = learning_service.get_notebooks()
+        notebooks = [Notebook.from_dict(nb) for nb in notebooks_data]
         current_notebook = next((nb for nb in notebooks if nb.id == notebook_id), None)
 
         if not current_notebook:
@@ -597,15 +600,14 @@ def create_learning_session(notebook_id: str) -> LearningSession:
         # 스킬 ID 저장
         st.session_state.selected_skill_id = selected_skill
 
-        # 4. 컨텐츠 생성 (사용자 관심사/목표 반영) - API 우선 + 폴백
-        learning_service = get_learning_service()
+        # 4. 컨텐츠 생성 (API를 통해)
         content = learning_service.generate_content(
             skill_id=selected_skill,
             skill_name=skill_info['name'],
             skill_description=skill_info.get('name', ''),
             user_cefr_level=profile.level.split('-')[0] if '-' in profile.level else profile.level,
-            user_interests=profile.interests,  # 관심사 반영
-            user_goals=profile.goals  # 목표 반영
+            user_interests=profile.interests,
+            user_goals=profile.goals
         )
 
         st.session_state.learning_content = content
@@ -621,6 +623,8 @@ def create_learning_session(notebook_id: str) -> LearningSession:
 
     except Exception as e:
         st.error(f"세션 생성 오류: {e}")
+        import traceback
+        st.error(traceback.format_exc())
         return None
 
 
