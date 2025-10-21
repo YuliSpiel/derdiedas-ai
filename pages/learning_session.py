@@ -24,6 +24,7 @@ from models.learning_cycle import LearningSession, LearningStage
 from learning.topic_selector import TopicSelector
 from learning.content_generator import LearningContentGenerator
 from learning.writing_feedback import WritingFeedbackGenerator
+from services.learning_service import get_learning_service
 
 # =============================================================================
 # 페이지 설정
@@ -370,11 +371,12 @@ def show_writing_stage():
                 # 피드백 생성
                 with st.spinner("AI가 피드백을 생성하는 중..."):
                     try:
-                        generator = WritingFeedbackGenerator()
+                        # API 우선 + 폴백 서비스 사용
+                        learning_service = get_learning_service()
                         profile_manager = ProfileManager()
                         profile = profile_manager.load_profile()
 
-                        feedback = generator.generate_feedback(
+                        feedback = learning_service.generate_writing_feedback(
                             user_text=user_writing,
                             task_prompt=task['prompt_ko'],
                             target_grammar=task['target_grammar'],
@@ -455,66 +457,35 @@ def show_completion_stage():
         # 숙련도 업데이트 (한 번만 실행)
         if "proficiency_updated" not in st.session_state or not st.session_state.proficiency_updated:
             try:
+                # API 우선 + 폴백 서비스 사용
+                learning_service = get_learning_service()
                 profile_manager = ProfileManager()
                 profile = profile_manager.load_profile()
 
                 skill_id = st.session_state.selected_skill_id
-                if skill_id and st.session_state.writing_feedback:
-                    proficiency_change = st.session_state.writing_feedback.get('skill_proficiency_change', 0)
+                session = st.session_state.learning_session
 
-                    # 현재 숙련도
+                if skill_id and st.session_state.writing_feedback and session:
+                    proficiency_change = st.session_state.writing_feedback.get('skill_proficiency_change', 0)
                     current_proficiency = profile.skill_proficiency.get(skill_id, 0)
                     new_proficiency = min(100, max(0, current_proficiency + proficiency_change))
 
-                    # 업데이트
-                    profile.skill_proficiency[skill_id] = new_proficiency
+                    # 학습 완료 처리 (API 통합 호출)
+                    result = learning_service.complete_learning(
+                        notebook_id=session.notebook_id,
+                        skill_proficiency={skill_id: new_proficiency},
+                        learning_count_increment=skill_id,
+                        stamps_increment=1
+                    )
 
-                    # 학습 횟수 증가
-                    if skill_id not in profile.skill_learning_count:
-                        profile.skill_learning_count[skill_id] = 0
-                    profile.skill_learning_count[skill_id] += 1
-
-                    # 스탬프 추가
-                    profile.total_stamps += 1
-
-                    # 저장
-                    profile_manager.save_profile(profile)
-
-                    # 숙련도가 업데이트되었으므로 추천 노트북 갱신
-                    profile_manager.refresh_recommended_notebooks()
-
-                    st.info(f"📈 스킬 숙련도: {current_proficiency:.1f} → {new_proficiency:.1f} ({proficiency_change:+.1f})")
-                    st.success("✨ 추천 노트북이 갱신되었습니다")
-
-                # 노트북 세션 업데이트 (항상 실행)
-                session = st.session_state.learning_session
-                if session and session.notebook_id:
-                    notebooks = profile_manager.load_notebooks()
-                    updated = False
-                    for nb in notebooks:
-                        if nb.id == session.notebook_id:
-                            nb.total_sessions += 1
-                            from datetime import datetime
-                            nb.last_studied = datetime.now().strftime("%m/%d")
-
-                            # 추천 노트북을 일반 노트북으로 변환
-                            if nb.is_recommended and nb.total_sessions > 0:
-                                nb.is_recommended = False
-                                # 선택된 스킬을 노트북에 저장
-                                if st.session_state.selected_skill_id:
-                                    nb.skill_id = st.session_state.selected_skill_id
-                                print(f"📌 추천 노트북 '{nb.title}'을(를) 내 노트북으로 이동했습니다")
-
-                            updated = True
-                            print(f"✅ 노트북 업데이트: {nb.title} - 세션 {nb.total_sessions}, 날짜 {nb.last_studied}")
-                            break
-                    if updated:
-                        profile_manager.save_notebooks(notebooks)
+                    if result.get('success'):
+                        st.info(f"📈 스킬 숙련도: {current_proficiency:.1f} → {new_proficiency:.1f} ({proficiency_change:+.1f})")
+                        st.success(f"✨ 스탬프 획득! (총 {result.get('updated_stamps', 0)}개)")
+                        st.success("✨ 추천 노트북이 갱신되었습니다")
                     else:
-                        print(f"⚠️ 노트북 ID를 찾을 수 없음: {session.notebook_id}")
-                        print(f"📋 현재 노트북 목록: {[nb.id for nb in notebooks]}")
+                        st.warning("학습 완료 처리 중 일부 오류가 발생했습니다.")
                 else:
-                    print(f"⚠️ 세션 정보 없음: session={session}, notebook_id={session.notebook_id if session else 'N/A'}")
+                    print(f"⚠️ 학습 완료 정보 누락: skill_id={skill_id}, feedback={st.session_state.writing_feedback is not None}, session={session}")
 
                 st.session_state.proficiency_updated = True
 
@@ -626,9 +597,9 @@ def create_learning_session(notebook_id: str) -> LearningSession:
         # 스킬 ID 저장
         st.session_state.selected_skill_id = selected_skill
 
-        # 4. 컨텐츠 생성 (사용자 관심사/목표 반영)
-        generator = LearningContentGenerator()
-        content = generator.generate_content(
+        # 4. 컨텐츠 생성 (사용자 관심사/목표 반영) - API 우선 + 폴백
+        learning_service = get_learning_service()
+        content = learning_service.generate_content(
             skill_id=selected_skill,
             skill_name=skill_info['name'],
             skill_description=skill_info.get('name', ''),

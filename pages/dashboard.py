@@ -13,6 +13,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 from models import UserProfile, Notebook, ProfileManager
+from services.learning_service import get_learning_service
 
 # 테스트 모드 임포트 (프로덕션 배포 시 삭제)
 from utils.test_mode import render_test_sidebar

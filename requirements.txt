@@ -18,6 +18,11 @@ datasets>=2.14.0
 # AI 피드백
 openai>=1.0.0
 
+# 백엔드 API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+
 # 유틸리티
 tqdm>=4.65.0
 python-dotenv>=1.0.0
