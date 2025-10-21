@@ -68,6 +68,7 @@ st.markdown(
         border: 2px solid #e0e0e0;
         border-radius: 10px;
         padding: 1.5rem;
+        padding-bottom: 1rem;
         margin: 1rem 0;
         background: white;
         transition: all 0.3s;
@@ -75,6 +76,11 @@ st.markdown(
     .notebook-card:hover {
         border-color: #667eea;
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+    .notebook-actions {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #f0f0f0;
     }
     .notebook-card-recommended {
         border: 2px solid #e8eaf6;
@@ -395,35 +401,38 @@ def show_notebook_list(notebooks: list):
         st.info("아직 생성한 노트북이 없습니다. 새 노트북을 만들어 보세요!")
     else:
         for notebook in user_notebooks:
-            st.markdown(
-                f"""
-            <div class="notebook-card">
-                <div class="notebook-title">{notebook.title}</div>
-                <div class="notebook-meta">
-                    총 학습 횟수: {notebook.total_sessions}회
-                    {f" · 최근: {notebook.last_studied}" if notebook.last_studied else ""}
-                </div>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
+            # 노트북 카드 컨테이너 시작
+            with st.container():
+                st.markdown(
+                    f"""
+                <div class="notebook-card">
+                    <div class="notebook-title">{notebook.title}</div>
+                    <div class="notebook-meta">
+                        총 학습 횟수: {notebook.total_sessions}회
+                        {f" · 최근: {notebook.last_studied}" if notebook.last_studied else ""}
+                    </div>
+                    <div class="notebook-actions">
+                """,
+                    unsafe_allow_html=True,
+                )
 
-            col1, col2, col3 = st.columns([2, 2, 1])
-            with col1:
-                if st.button(
-                    "📖 열기", key=f"open_{notebook.id}", use_container_width=True
-                ):
-                    st.info("학습 사이클은 곧 제공될 예정입니다!")
-                    # TODO: 학습 사이클 페이지로 이동
-            with col2:
-                if st.button(
-                    "🗑️ 삭제", key=f"delete_{notebook.id}", use_container_width=True
-                ):
-                    st.session_state.profile_manager.delete_notebook(notebook.id)
-                    st.success(f"'{notebook.title}' 노트북이 삭제되었습니다.")
-                    st.rerun()
-            with col3:
-                pass  # 여백
+                # 버튼 (카드 안쪽)
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button(
+                        "📖 열기", key=f"open_{notebook.id}", use_container_width=True, type="primary"
+                    ):
+                        st.info("학습 사이클은 곧 제공될 예정입니다!")
+                        # TODO: 학습 사이클 페이지로 이동
+                with col2:
+                    if st.button(
+                        "🗑️ 삭제", key=f"delete_{notebook.id}", use_container_width=True
+                    ):
+                        st.session_state.profile_manager.delete_notebook(notebook.id)
+                        st.success(f"'{notebook.title}' 노트북이 삭제되었습니다.")
+                        st.rerun()
+
+                st.markdown("</div></div>", unsafe_allow_html=True)
 
 
 # =============================================================================
