@@ -223,7 +223,12 @@ def show_profile_edit(profile: UserProfile):
             """
             st.markdown(button_html, unsafe_allow_html=True)
 
-            if st.button(f"선택###{idx}", key=f"bg_btn_{idx}", use_container_width=True, type="primary" if is_selected else "secondary"):
+            if st.button(
+                f"선택 {idx}",
+                key=f"bg_btn_{idx}",
+                use_container_width=True,
+                type="primary" if is_selected else "secondary",
+            ):
                 st.session_state.temp_bg_color = gradient
                 st.rerun()
 
@@ -234,7 +239,9 @@ def show_profile_edit(profile: UserProfile):
 
         # 아이콘 선택
         icons = ["🐶", "🐱", "🐥", "🐯", "🐼", "🐻", "⛄️", "🩵"]
-        icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
+        icon_idx = (
+            icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
+        )
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
 
         # 관심사
@@ -252,19 +259,21 @@ def show_profile_edit(profile: UserProfile):
         ]
 
         # 기존 관심사 중 목록에 없는 것들 추가
-        existing_custom_interests = [i for i in profile.interests if i not in interest_options]
+        existing_custom_interests = [
+            i for i in profile.interests if i not in interest_options
+        ]
 
         new_interests = st.multiselect(
             "관심사 (복수 선택)",
             interest_options,
-            default=[i for i in profile.interests if i in interest_options]
+            default=[i for i in profile.interests if i in interest_options],
         )
 
         # 커스텀 관심사 입력
         custom_interest = st.text_input(
             "기타 관심사 (직접 입력, 쉼표로 구분)",
             value=", ".join(existing_custom_interests),
-            placeholder="예: 게임, 사진, 디자인"
+            placeholder="예: 게임, 사진, 디자인",
         )
 
         # 커스텀 관심사 파싱
@@ -273,8 +282,20 @@ def show_profile_edit(profile: UserProfile):
             new_interests.extend(custom_list)
 
         # 목표
-        goal_options = ["회화", "문법", "작문", "독해", "시험 대비", "비즈니스 독일어", "여행", "취미", "유학 준비"]
-        new_goals = st.multiselect("학습 목표 (복수 선택)", goal_options, default=profile.goals)
+        goal_options = [
+            "회화",
+            "문법",
+            "작문",
+            "독해",
+            "시험 대비",
+            "비즈니스 독일어",
+            "여행",
+            "취미",
+            "유학 준비",
+        ]
+        new_goals = st.multiselect(
+            "학습 목표 (복수 선택)", goal_options, default=profile.goals
+        )
 
         col1, col2 = st.columns(2)
         with col1:
@@ -311,7 +332,10 @@ def show_profile_edit(profile: UserProfile):
 
 def show_recommended_notebooks(notebooks: list):
     """추천 노트북 표시"""
-    st.markdown('<div class="section-header">📌 오늘의 추천 사이클 노트북</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-header">📌 오늘의 추천 사이클 노트북</div>',
+        unsafe_allow_html=True,
+    )
 
     recommended = [nb for nb in notebooks if nb.is_recommended]
 
@@ -360,7 +384,9 @@ def show_recommended_notebooks(notebooks: list):
 
 def show_notebook_list(notebooks: list):
     """노트북 목록 표시"""
-    st.markdown('<div class="section-header">📚 내 노트북</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-header">📚 내 노트북</div>', unsafe_allow_html=True
+    )
 
     # 추천 노트북 제외
     user_notebooks = [nb for nb in notebooks if not nb.is_recommended]
@@ -384,7 +410,9 @@ def show_notebook_list(notebooks: list):
 
             col1, col2, col3 = st.columns([2, 2, 1])
             with col1:
-                if st.button("📖 열기", key=f"open_{notebook.id}", use_container_width=True):
+                if st.button(
+                    "📖 열기", key=f"open_{notebook.id}", use_container_width=True
+                ):
                     st.info("학습 사이클은 곧 제공될 예정입니다!")
                     # TODO: 학습 사이클 페이지로 이동
             with col2:
@@ -496,7 +524,9 @@ def main():
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("📊 레벨 테스트 하러 가기", use_container_width=True, type="primary"):
+        if st.button(
+            "📊 레벨 테스트 하러 가기", use_container_width=True, type="primary"
+        ):
             st.switch_page("pages/level_test.py")
 
 
