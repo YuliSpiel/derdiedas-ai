@@ -367,33 +367,32 @@ def show_recommended_notebooks(notebooks: list):
 
     for idx, notebook in enumerate(recommended[:2]):
         with col1 if idx == 0 else col2:
-            # 추천 노트북 카드 (아직 생성 전이므로 옅은 스타일)
-            st.markdown(
-                f"""
-            <div class="notebook-card-recommended">
-                <div class="notebook-title">
-                    {notebook.title}
-                    <span class="recommended-badge">추천</span>
-                </div>
-                <div class="notebook-meta">
-                    <span class="coming-soon">곧 제공될 예정입니다</span>
-                </div>
-                <div class="notebook-meta">
-                    총 학습 횟수: {notebook.total_sessions}회
-                    {f" · 최근: {notebook.last_studied}" if notebook.last_studied else ""}
-                </div>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
+            # Streamlit 네이티브 컨테이너 사용 (추천 노트북)
+            with st.container(border=True):
+                # 제목과 추천 뱃지
+                st.markdown(f"### {notebook.title} 🌟")
+                st.info("곧 제공될 예정입니다")
+                st.caption(f"총 학습 횟수: {notebook.total_sessions}회{f' · 최근: {notebook.last_studied}' if notebook.last_studied else ''}")
 
-            # 열기 버튼 (비활성화)
-            st.button(
-                "📖 열기 (준비 중)",
-                key=f"open_rec_{notebook.id}",
-                disabled=True,
-                use_container_width=True,
-            )
+                st.markdown("---")
+
+                # 버튼 (현재는 비활성화)
+                col_btn1, col_btn2 = st.columns(2)
+                with col_btn1:
+                    st.button(
+                        "📖 열기",
+                        key=f"open_rec_{notebook.id}",
+                        disabled=True,
+                        use_container_width=True,
+                        type="primary"
+                    )
+                with col_btn2:
+                    st.button(
+                        "🗑️ 삭제",
+                        key=f"delete_rec_{notebook.id}",
+                        disabled=True,
+                        use_container_width=True
+                    )
 
 
 # =============================================================================
