@@ -66,10 +66,10 @@ st.markdown(
     }
     .notebook-card {
         border: 2px solid #e0e0e0;
-        border-radius: 10px;
+        border-radius: 10px 10px 0 0;
         padding: 1.5rem;
         padding-bottom: 1rem;
-        margin: 1rem 0;
+        margin: 1rem 0 0 0;
         background: white;
         transition: all 0.3s;
     }
@@ -81,6 +81,19 @@ st.markdown(
         margin-top: 1rem;
         padding-top: 1rem;
         border-top: 1px solid #f0f0f0;
+    }
+    /* 노트북 카드 바로 다음 요소 (버튼 컨테이너) 스타일 */
+    .notebook-card + div {
+        border: 2px solid #e0e0e0;
+        border-top: 1px solid #f0f0f0;
+        border-radius: 0 0 10px 10px;
+        padding: 1rem 1.5rem 1.2rem 1.5rem;
+        margin: 0 0 1.5rem 0;
+        background: white;
+    }
+    .notebook-card:hover + div {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
     }
     .notebook-card-recommended {
         border: 2px solid #e8eaf6;
@@ -401,22 +414,15 @@ def show_notebook_list(notebooks: list):
         st.info("아직 생성한 노트북이 없습니다. 새 노트북을 만들어 보세요!")
     else:
         for notebook in user_notebooks:
-            # 노트북 카드 컨테이너 시작
-            with st.container():
-                st.markdown(
-                    f"""
-                <div class="notebook-card">
-                    <div class="notebook-title">{notebook.title}</div>
-                    <div class="notebook-meta">
-                        총 학습 횟수: {notebook.total_sessions}회
-                        {f" · 최근: {notebook.last_studied}" if notebook.last_studied else ""}
-                    </div>
-                    <div class="notebook-actions">
-                """,
-                    unsafe_allow_html=True,
-                )
+            # Streamlit 네이티브 컨테이너 사용
+            with st.container(border=True):
+                # 노트북 정보
+                st.markdown(f"### {notebook.title}")
+                st.caption(f"총 학습 횟수: {notebook.total_sessions}회{f' · 최근: {notebook.last_studied}' if notebook.last_studied else ''}")
 
-                # 버튼 (카드 안쪽)
+                st.markdown("---")
+
+                # 버튼
                 col1, col2 = st.columns(2)
                 with col1:
                     if st.button(
@@ -431,8 +437,6 @@ def show_notebook_list(notebooks: list):
                         st.session_state.profile_manager.delete_notebook(notebook.id)
                         st.success(f"'{notebook.title}' 노트북이 삭제되었습니다.")
                         st.rerun()
-
-                st.markdown("</div></div>", unsafe_allow_html=True)
 
 
 # =============================================================================
