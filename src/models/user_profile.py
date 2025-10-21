@@ -189,20 +189,54 @@ class ProfileManager:
 
     def _create_default_notebooks(self) -> List[Notebook]:
         """기본 노트북 생성 (추천용)"""
+        # 스킬 데이터 기반 추천 노트북 생성
+        try:
+            from pathlib import Path
+            import csv
+
+            skill_tree_path = Path("data/grammar_ontology/skill_tree.csv")
+            if skill_tree_path.exists():
+                with open(skill_tree_path, "r", encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    skills = list(reader)
+
+                # A1 레벨 스킬 중 일부를 추천 노트북으로 생성
+                recommended_skills = [s for s in skills if s['cefr'] == 'A1'][:3]
+
+                notebooks = []
+                for skill in recommended_skills:
+                    notebooks.append(Notebook(
+                        id=f"nb_{skill['skill_id']}",
+                        title=skill['name'],  # 스킬 이름을 타이틀로 직접 사용
+                        category="Grammar",
+                        topic=skill['area'],
+                        is_recommended=True,
+                        created_at=datetime.now().isoformat(),
+                    ))
+
+                return notebooks if notebooks else self._fallback_notebooks()
+            else:
+                return self._fallback_notebooks()
+        except Exception as e:
+            print(f"스킬 데이터 로드 실패: {e}")
+            return self._fallback_notebooks()
+
+    def _fallback_notebooks(self) -> List[Notebook]:
+        """기본 노트북 (폴백)"""
         return [
             Notebook(
                 id="nb_grammar_articles",
-                title="문법 · 정관사(der/die/das)",
-                category="문법",
-                topic="정관사",
+                title="Definite article – nominative",
+                category="Grammar",
+                topic="Articles",
                 is_recommended=True,
                 created_at=datetime.now().isoformat(),
             ),
             Notebook(
-                id="nb_expr_business",
-                title="표현 · 출장 회화",
-                category="표현",
-                topic="출장 회화",
+                id="nb_grammar_verbs",
+                title="Present tense – regular verbs",
+                category="Grammar",
+                topic="Verbs",
                 is_recommended=True,
                 created_at=datetime.now().isoformat(),
             ),
