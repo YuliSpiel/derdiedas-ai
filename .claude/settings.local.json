@@ -16,7 +16,8 @@
       "Bash(git commit -m \"refactor: Rename page files to English-only names\n\n- Renamed 1_📚_대시보드.py to 1_dashboard.py\n- Renamed 2_📊_레벨테스트.py to 2_level_test.py\n- Updated README.md to reflect new filenames\n\")",
       "Bash(git commit -m \"refactor: Simplify app structure with auto-redirect\n\n- Changed app.py to simple entry point with auto-redirect\n- Dashboard is now the main home page\n- Removed page numbering (1_, 2_) for cleaner navigation\n- Updated README.md with new structure\n\nNavigation:\n- First visit: Redirects to dashboard\n- Existing users: Redirects to dashboard\n- Sidebar only shows: dashboard, level_test\n\")",
       "Bash(git commit -m \"feat: Remove sidebar navigation, add page buttons\n\n- Set sidebar to collapsed state in all pages\n- Added navigation button in dashboard to level test\n- Added back button in level test to return to dashboard\n- Cleaner UI without sidebar clutter\n\")",
-      "Bash(git commit -m \"feat: Completely hide sidebar with CSS\n\n- Added CSS to hide sidebar completely: [data-testid=\"\"stSidebar\"\"] { display: none; }\n- Applied to both dashboard and level_test pages\n- Main content now uses full width\n- Cleaner, distraction-free UI\n\")"
+      "Bash(git commit -m \"feat: Completely hide sidebar with CSS\n\n- Added CSS to hide sidebar completely: [data-testid=\"\"stSidebar\"\"] { display: none; }\n- Applied to both dashboard and level_test pages\n- Main content now uses full width\n- Cleaner, distraction-free UI\n\")",
+      "Bash(git commit -m \"docs: Add MERLIN corpus citation and data attribution\n\n- Added comprehensive citation section in README.md\n- Included BibTeX citation for MERLIN corpus\n- Added citation in CEFR_Eval.py header and load_corpus method\n- Proper attribution to Boyd et al. (2014)\n- License information (CC BY-SA 4.0)\n- Dataset source URL\n\")"
     ],
     "deny": [],
     "ask": []

@@ -7,6 +7,14 @@
 # - 답변에 따라 다음 질문 난이도를 조정하는 적응형 시스템
 # - CEFR 라벨링된 코퍼스와의 유사도 비교를 통한 레벨 판정
 # - A2~C1 각 레벨을 초반/중반/후반으로 세분화
+#
+# 데이터 출처:
+# MERLIN German Corpus (CC BY-SA 4.0)
+# Boyd, A., Hana, J., Nicolas, L., Meurers, D., Wisniewski, K., Abel, A.,
+# Schöne, K., Stindlová, B., & Vettori, C. (2014).
+# The MERLIN corpus: Learner language and the CEFR.
+# In Proceedings of LREC'14 (pp. 1281-1288).
+# https://huggingface.co/datasets/UniversalCEFR/merlin_de
 
 """
 
@@ -275,10 +283,21 @@ class CEFRCorpusLoader:
         self.tokenizer = None
 
     def load_corpus(self):
-        """MERLIN 독일어 코퍼스 로드"""
+        """
+        MERLIN 독일어 코퍼스 로드
+
+        MERLIN (Multilingual platform for European Reference Levels: Interlanguage Exploration)
+        Source: https://huggingface.co/datasets/UniversalCEFR/merlin_de
+        License: CC BY-SA 4.0
+
+        Citation:
+        Boyd, A., et al. (2014). The MERLIN corpus: Learner language and the CEFR.
+        In Proceedings of LREC'14 (pp. 1281-1288).
+        """
         from datasets import load_dataset
 
         print("📚 CEFR 라벨링된 독일어 코퍼스 로딩 중...")
+        print("📄 MERLIN Corpus (CC BY-SA 4.0) - Boyd et al. (2014)")
         dataset = load_dataset("UniversalCEFR/merlin_de", trust_remote_code=True)
 
         # 데이터 구조 확인 및 정리
