@@ -412,30 +412,34 @@ def show_notebook_list(notebooks: list):
     if not user_notebooks:
         st.info("아직 생성한 노트북이 없습니다. 새 노트북을 만들어 보세요!")
     else:
-        for notebook in user_notebooks:
-            # Streamlit 네이티브 컨테이너 사용
-            with st.container(border=True):
-                # 노트북 정보
-                st.markdown(f"### {notebook.title}")
-                st.caption(f"총 학습 횟수: {notebook.total_sessions}회{f' · 최근: {notebook.last_studied}' if notebook.last_studied else ''}")
+        # 2열로 표시
+        col1, col2 = st.columns(2)
 
-                st.markdown("---")
+        for idx, notebook in enumerate(user_notebooks):
+            with col1 if idx % 2 == 0 else col2:
+                # Streamlit 네이티브 컨테이너 사용
+                with st.container(border=True):
+                    # 노트북 정보
+                    st.markdown(f"### {notebook.title}")
+                    st.caption(f"총 학습 횟수: {notebook.total_sessions}회{f' · 최근: {notebook.last_studied}' if notebook.last_studied else ''}")
 
-                # 버튼
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button(
-                        "📖 열기", key=f"open_{notebook.id}", use_container_width=True, type="primary"
-                    ):
-                        st.info("학습 사이클은 곧 제공될 예정입니다!")
-                        # TODO: 학습 사이클 페이지로 이동
-                with col2:
-                    if st.button(
-                        "🗑️ 삭제", key=f"delete_{notebook.id}", use_container_width=True
-                    ):
-                        st.session_state.profile_manager.delete_notebook(notebook.id)
-                        st.success(f"'{notebook.title}' 노트북이 삭제되었습니다.")
-                        st.rerun()
+                    st.markdown("---")
+
+                    # 버튼
+                    col_btn1, col_btn2 = st.columns(2)
+                    with col_btn1:
+                        if st.button(
+                            "📖 열기", key=f"open_{notebook.id}", use_container_width=True, type="primary"
+                        ):
+                            st.info("학습 사이클은 곧 제공될 예정입니다!")
+                            # TODO: 학습 사이클 페이지로 이동
+                    with col_btn2:
+                        if st.button(
+                            "🗑️ 삭제", key=f"delete_{notebook.id}", use_container_width=True
+                        ):
+                            st.session_state.profile_manager.delete_notebook(notebook.id)
+                            st.success(f"'{notebook.title}' 노트북이 삭제되었습니다.")
+                            st.rerun()
 
 
 # =============================================================================
