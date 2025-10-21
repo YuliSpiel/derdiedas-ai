@@ -46,7 +46,6 @@ st.markdown(
     }
 
     .profile-banner {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         padding: 1.5rem;
         border-radius: 10px;
@@ -146,7 +145,7 @@ def show_profile_banner(profile: UserProfile):
     """프로필 배너 표시"""
     st.markdown(
         f"""
-    <div class="profile-banner">
+    <div class="profile-banner" style="background: {profile.profile_bg_color};">
         <div class="profile-icon">{profile.profile_icon}</div>
         <h2 style="text-align: center; margin-bottom: 1rem;">{profile.nickname}</h2>
         <div style="text-align: center;">
@@ -187,6 +186,27 @@ def show_profile_edit(profile: UserProfile):
         icons = ["🐶", "🐱", "🐥", "🐯", "🐼", "🐻", "⛄️", "🩵"]
         icon_idx = icons.index(profile.profile_icon) if profile.profile_icon in icons else 0
         new_icon = st.selectbox("프로필 아이콘", icons, index=icon_idx)
+
+        # 배경색 선택
+        bg_colors = {
+            "보라 그라디언트": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            "파란 그라디언트": "linear-gradient(135deg, #2196F3 0%, #1976D2 100%)",
+            "핑크 그라디언트": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+            "초록 그라디언트": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+            "오렌지 그라디언트": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+            "민트 그라디언트": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+        }
+
+        # 현재 배경색 찾기
+        current_bg_name = "보라 그라디언트"
+        for name, color in bg_colors.items():
+            if color == profile.profile_bg_color:
+                current_bg_name = name
+                break
+
+        bg_idx = list(bg_colors.keys()).index(current_bg_name) if current_bg_name in bg_colors else 0
+        new_bg_name = st.selectbox("배경색", list(bg_colors.keys()), index=bg_idx)
+        new_bg_color = bg_colors[new_bg_name]
 
         # 관심사
         interest_options = [
@@ -236,6 +256,7 @@ def show_profile_edit(profile: UserProfile):
         if submitted:
             profile.nickname = new_nickname
             profile.profile_icon = new_icon
+            profile.profile_bg_color = new_bg_color
             profile.interests = new_interests
             profile.goals = new_goals
             st.session_state.profile_manager.save_profile(profile)

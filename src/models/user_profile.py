@@ -21,6 +21,7 @@ class UserProfile:
     goals: List[str] = field(default_factory=lambda: ["회화", "문법"])
     last_active: Optional[str] = None
     profile_icon: str = "🎓"
+    profile_bg_color: str = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"  # 배경 그라디언트
     created_at: Optional[str] = None
 
     def to_dict(self) -> Dict:
@@ -34,6 +35,7 @@ class UserProfile:
             "goals": self.goals,
             "last_active": self.last_active,
             "profile_icon": self.profile_icon,
+            "profile_bg_color": self.profile_bg_color,
             "created_at": self.created_at,
         }
 
@@ -49,6 +51,7 @@ class UserProfile:
             goals=data.get("goals", ["회화", "문법"]),
             last_active=data.get("last_active"),
             profile_icon=data.get("profile_icon", "🎓"),
+            profile_bg_color=data.get("profile_bg_color", "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"),
             created_at=data.get("created_at"),
         )
 
